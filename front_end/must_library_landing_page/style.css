@@ -14,6 +14,7 @@ body {
     background-color: #ffffff;
     color: #333;
     line-height: 1.6;
+    scroll-behavior: smooth;
 }
 
 .container {
@@ -27,8 +28,8 @@ body {
    ====================================== */
 
 .header {
-    background-color: white;
-    border-bottom: 1px solid #e0e0e0;
+    background-color: #0c4271;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     padding: 15px 0;
 }
 
@@ -42,10 +43,11 @@ body {
 .logo {
     display: flex;
     align-items: center;
-    gap: 10px;
-    font-size: 16px;
-    font-weight: bold;
-    color: #1a73e8;
+}
+
+.logo-image {
+    height: 50px;
+    width: auto;
 }
 
 .logo-icon {
@@ -61,13 +63,13 @@ body {
 
 .nav-links a {
     text-decoration: none;
-    color: #5f6368;
+    color: white;
     font-size: 14px;
     transition: color 0.3s;
 }
 
 .nav-links a:hover {
-    color: #1a73e8;
+    color: #D4A017;
 }
 
 .login-button {
@@ -331,89 +333,68 @@ body {
 }
 
 /* ======================================
-   Footer Styles
+   Footer Styles - Large Logo Layout
    ====================================== */
 
 .footer {
-    background-color: #1a1a1a;
-    color: #999;
-    padding: 60px 0 20px;
-}
-
-.footer-content {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 40px;
-    margin-bottom: 40px;
-}
-
-.footer-heading {
+    background-color: #0c4271;
     color: white;
-    font-size: 14px;
-    margin-bottom: 20px;
-    display: flex;
+    padding: 50px 0 0;
+}
+
+.footer-main {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
     align-items: center;
-    gap: 8px;
+    padding-bottom: 30px;
 }
 
-.footer-text {
-    font-size: 13px;
-    line-height: 1.8;
-    color: #999;
-}
-
-.footer-link {
-    display: block;
-    color: #999;
-    text-decoration: none;
-    font-size: 13px;
-    margin-bottom: 12px;
-    transition: color 0.3s;
-}
-
-.footer-link:hover {
-    color: #1a73e8;
-}
-
-/* Social Icons */
-.social-icons {
+.footer-logo-section {
     display: flex;
-    gap: 15px;
-    margin-top: 15px;
+    justify-content: flex-start;
 }
 
-.social-icon {
-    font-size: 20px;
-    text-decoration: none;
-    transition: transform 0.3s;
+.footer-logo-large {
+    height: 120px;
+    width: auto;
 }
 
-.social-icon:hover {
-    transform: scale(1.2);
-}
-
-/* Footer Bottom */
-.footer-bottom {
-    border-top: 1px solid #333;
-    padding-top: 20px;
+.footer-contact-section {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 12px;
-}
-
-.footer-bottom-links {
-    display: flex;
+    flex-direction: column;
     gap: 20px;
 }
 
-.footer-bottom-links a {
-    color: #999;
-    text-decoration: none;
+.contact-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
 }
 
-.footer-bottom-links a:hover {
-    color: #1a73e8;
+.contact-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+    opacity: 0.8;
+}
+
+.contact-text {
+    font-size: 14px;
+    line-height: 1.6;
+    color: white;
+}
+
+.footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 20px 0;
+}
+
+.footer-copyright {
+    font-size: 12px;
+    color: white;
+    margin: 0;
+    opacity: 0.9;
+    line-height: 1.6;
 }
 
 /* ======================================
@@ -424,13 +405,17 @@ body {
     .features-grid {
         grid-template-columns: repeat(2, 1fr);
     }
-
-    .footer-content {
-        grid-template-columns: repeat(2, 1fr);
-    }
 }
 
 @media (max-width: 768px) {
+    .nav-links {
+        gap: 15px;
+    }
+
+    .nav-links a {
+        font-size: 13px;
+    }
+
     .hero-content {
         grid-template-columns: 1fr;
     }
@@ -452,13 +437,28 @@ body {
         grid-template-columns: 1fr;
     }
 
-    .footer-content {
+    .footer-main {
         grid-template-columns: 1fr;
+        gap: 30px;
     }
 
-    .footer-bottom {
-        flex-direction: column;
-        gap: 15px;
-        text-align: center;
+    .footer-logo-section {
+        justify-content: center;
+    }
+
+    .footer-logo-large {
+        height: 80px;
+    }
+
+    .contact-item {
+        gap: 12px;
+    }
+
+    .contact-text {
+        font-size: 13px;
+    }
+
+    .footer-copyright {
+        font-size: 11px;
     }
 }
