@@ -229,6 +229,11 @@ body {
 .show-password:hover {
     opacity: 1;
 }
+.logo-img {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+}
 
 /* Remember Device Checkbox */
 .remember-device {
