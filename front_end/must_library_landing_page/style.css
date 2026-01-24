@@ -26,7 +26,17 @@ body {
 /* ======================================
    Header Styles
    ====================================== */
-
+.logo-img {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+}   
+.logo-text {
+    font-size: 20px;
+    font-weight: bold;
+    margin-left: 10px;
+    color: white;
+}
 .header {
     background-color: #0c4271;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
