@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MUST Smart Library AI - Academic Chat</title>
+    <!-- Link to CSS file in same directory -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Top Navigation Bar -->
+    <header class="header">
+        <div class="container">
+            <!-- Logo -->
+            <div class="logo">
+                <span class="logo-icon">📚</span>
+                <span class="logo-text">MUST Smart Library</span>
+            </div>
+
+            <!-- Navigation Menu -->
+            <nav class="nav-menu">
+                <a href="#" class="nav-item">Library Home</a>
+                <a href="#" class="nav-item">Student Portal</a>
+                <a href="#" class="nav-item active">Chat with AI</a>
+            </nav>
+
+            <!-- User Profile -->
+            <div class="user-profile">
+                <div class="profile-circle">👤</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Chat Interface -->
+    <main class="chat-container">
+        <!-- Left Sidebar: Chat History -->
+        <aside class="sidebar">
+            <!-- New Chat Button -->
+            <button class="new-chat-button">
+                <span class="plus-icon">+</span>
+                New Chat
+            </button>
+
+            <!-- Chat History Section -->
+            <div class="history-section">
+                <h3 class="history-title">ACADEMIC HISTORY</h3>
+
+                <!-- Chat History Items -->
+                <div class="history-list">
+                    <div class="history-item">
+                        <span class="history-icon">📄</span>
+                        <span class="history-text">Data Structures Help</span>
+                    </div>
+                    <div class="history-item">
+                        <span class="history-icon">📘</span>
+                        <span class="history-text">Thesis Format MUST</span>
+                    </div>
+                    <div class="history-item">
+                        <span class="history-icon">📕</span>
+                        <span class="history-text">Calculus III Resources</span>
+                    </div>
+                    <div class="history-item">
+                        <span class="history-icon">📗</span>
+                        <span class="history-text">Physics Lab Report Guide</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar Footer -->
+            <div class="sidebar-footer">
+                <button class="sidebar-button">
+                    <span>⚙️</span> Settings
+                </button>
+                <button class="sidebar-button">
+                    <span>❓</span> Library Help Desk
+                </button>
+            </div>
+        </aside>
+
+        <!-- Right Side: Chat Area -->
+        <div class="chat-area">
+            <!-- Welcome Message Section -->
+            <div class="welcome-section">
+                <h1 class="chat-title">Welcome to MUST Smart Library AI</h1>
+                <p class="chat-subtitle">
+                    I can help you find books, research papers, and academic resources
+                    available at Mirpur University of Science and Technology.
+                </p>
+
+                <!-- Quick Action Buttons -->
+                <div class="quick-actions">
+                    <button class="action-button">
+                        <span class="action-icon">📚</span>
+                        Engineering Resources
+                    </button>
+                    <button class="action-button">
+                        <span class="action-icon">🔬</span>
+                        AI Research Papers
+                    </button>
+                    <button class="action-button">
+                        <span class="action-icon">⏰</span>
+                        Library Hours
+                    </button>
+                    <button class="action-button">
+                        <span class="action-icon">📋</span>
+                        Thesis Guidelines
+                    </button>
+                </div>
+            </div>
+
+            <!-- Sample Conversation -->
+            <div class="conversation">
+                <!-- User Question -->
+                <div class="message user-message">
+                    <div class="message-content">
+                        Can you find me the latest textbooks for Data Structures and Algorithms available
+                        in the MUST central library?
+                    </div>
+                </div>
+
+                <!-- AI Response -->
+                <div class="message ai-message">
+                    <div class="ai-avatar">🤖</div>
+                    <div class="message-content">
+                        <p>Certainly! I've found several resources in our catalog for you:</p>
+
+                        <ul class="resource-list">
+                            <li>
+                                <strong>Introduction to Algorithms</strong> by Cormen et al. (3rd Ed) -
+                                Available as E-book through MUST Portal
+                            </li>
+                            <li>
+                                <strong>Data Structures and Algorithm Analysis in C++</strong> by Mark Allen Weiss -
+                                Available in Reference Section
+                            </li>
+                            <li>
+                                <strong>Algorithms</strong> by Robert Sedgewick -
+                                Available as E-book through MUST Portal
+                            </li>
+                        </ul>
+
+                        <p class="ai-question">
+                            Would you like me to reserve any of these or show the full call numbers?
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="input-area">
+                <div class="input-container">
+                    <button class="attach-button">📎</button>
+                    <button class="image-button">🖼️</button>
+                    <input type="text" class="message-input"
+                        placeholder="Ask about books, subjects, or academic resources at MUST...">
+                    <button class="send-button">➤</button>
+                </div>
+
+                <!-- Disclaimer -->
+                <p class="disclaimer">
+                    MUST AI is an experimental tool and may occasionally provide inaccurate information about library
+                    availability.
+                    Please verify critical information with the library staff.
+                </p>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

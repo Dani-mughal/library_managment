@@ -1,0 +1,350 @@
+/* ======================================
+   MUST Student Login - Style Sheet
+   ====================================== */
+
+/* Reset and Basic Setup */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* ======================================
+   Header Styles
+   ====================================== */
+
+.header {
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 15px 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Logo Styling */
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #1a73e8;
+}
+
+.logo-icon {
+    font-size: 24px;
+}
+
+/* Navigation Links */
+.nav-links {
+    display: flex;
+    gap: 25px;
+    align-items: center;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #5f6368;
+    font-size: 14px;
+    transition: color 0.3s;
+}
+
+.nav-links a:hover {
+    color: #1a73e8;
+}
+
+.help-button {
+    background-color: #1a73e8;
+    color: white !important;
+    padding: 8px 16px;
+    border-radius: 4px;
+}
+
+.help-button:hover {
+    background-color: #1557b0;
+}
+
+/* ======================================
+   Main Content Area
+   ====================================== */
+
+.main-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 200px);
+    padding: 40px 20px;
+}
+
+/* ======================================
+   Login Card Styles
+   ====================================== */
+
+.login-card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    max-width: 450px;
+    width: 100%;
+    overflow: hidden;
+}
+
+/* Login Header with Background */
+.login-header {
+    background: linear-gradient(135deg, #1a73e8 0%, #4285f4 100%);
+    background-image: url('https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=800');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    padding: 60px 30px;
+    text-align: center;
+    position: relative;
+}
+
+/* Dark overlay for better text readability */
+.login-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(26, 115, 232, 0.8);
+}
+
+.login-header * {
+    position: relative;
+    z-index: 1;
+}
+
+.portal-label {
+    font-size: 12px;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+    opacity: 0.9;
+}
+
+.login-title {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+/* Login Body - Form Area */
+.login-body {
+    padding: 30px;
+}
+
+.login-description {
+    color: #5f6368;
+    font-size: 14px;
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+
+/* ======================================
+   Form Styles
+   ====================================== */
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.icon {
+    font-size: 16px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #1a73e8;
+}
+
+.form-input::placeholder {
+    color: #999;
+}
+
+/* Password Field with Forgot Link */
+.password-wrapper {
+    position: relative;
+}
+
+.forgot-link {
+    position: absolute;
+    right: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    color: #1a73e8;
+    text-decoration: none;
+}
+
+.forgot-link:hover {
+    text-decoration: underline;
+}
+
+.show-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    opacity: 0.6;
+}
+
+.show-password:hover {
+    opacity: 1;
+}
+
+/* Remember Device Checkbox */
+.remember-device {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.checkbox {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.remember-device label {
+    font-size: 14px;
+    color: #5f6368;
+    cursor: pointer;
+}
+
+/* ======================================
+   Sign In Button
+   ====================================== */
+
+.sign-in-button {
+    width: 100%;
+    padding: 14px;
+    background-color: #1a73e8;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.sign-in-button:hover {
+    background-color: #1557b0;
+}
+
+/* ======================================
+   Institutional Access Section
+   ====================================== */
+
+.institutional-access {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+    text-align: center;
+}
+
+.access-label {
+    font-size: 11px;
+    color: #999;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+}
+
+.institution-icon {
+    font-size: 32px;
+    opacity: 0.6;
+}
+
+/* ======================================
+   Footer Styles
+   ====================================== */
+
+.footer {
+    background-color: white;
+    padding: 20px;
+    text-align: center;
+    color: #5f6368;
+    font-size: 12px;
+    margin-top: 40px;
+}
+
+.footer-links {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.footer-links a {
+    color: #1a73e8;
+    text-decoration: none;
+}
+
+.footer-links a:hover {
+    text-decoration: underline;
+}
+
+/* ======================================
+   Responsive Design
+   ====================================== */
+
+@media (max-width: 768px) {
+    .nav-links {
+        gap: 15px;
+    }
+    
+    .nav-links a {
+        font-size: 12px;
+    }
+    
+    .login-card {
+        margin: 20px;
+    }
+    
+    .login-header {
+        padding: 40px 20px;
+    }
+    
+    .login-title {
+        font-size: 24px;
+    }
+}

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MUST Student Login - Smart Library</title>
+    <!-- Link to our CSS file in the same directory -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Top Navigation Bar -->
+    <header class="header">
+        <div class="container">
+            <!-- Logo Section -->
+            <div class="logo">
+                <span class="logo-icon">📚</span>
+                <span class="logo-text">MUST Smart Library</span>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="nav-links">
+                <a href="#">Home</a>
+                <a href="#">About Library</a>
+                <a href="#">Contact</a>
+                <a href="#" class="help-button">Help</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <!-- Login Card Container -->
+        <div class="login-card">
+            <!-- Top Section with Background Image -->
+            <div class="login-header">
+                <p class="portal-label">STUDENT PORTAL</p>
+                <h1 class="login-title">MUST Student Login</h1>
+            </div>
+
+            <!-- Login Form Section -->
+            <div class="login-body">
+                <!-- Description Text -->
+                <p class="login-description">
+                    Access the AI-Based Smart Library System with your university credentials.
+                </p>
+
+                <!-- Student ID Input Field -->
+                <div class="form-group">
+                    <label for="student-id" class="form-label">
+                        <span class="icon">🆔</span>
+                        Student ID
+                    </label>
+                    <input type="text" id="student-id" class="form-input" placeholder="e.g. MUST-2023-XXX">
+                </div>
+
+                <!-- Password Input Field -->
+                <div class="form-group">
+                    <label for="password" class="form-label">
+                        <span class="icon">🔒</span>
+                        Password
+                    </label>
+                    <div class="password-wrapper">
+                        <input type="password" id="password" class="form-input" placeholder="••••••••">
+                        <a href="#" class="forgot-link">Forgot password?</a>
+                        <button type="button" class="show-password" onclick="togglePassword()">👁️</button>
+                    </div>
+                </div>
+
+                <!-- Remember Device Checkbox -->
+                <div class="remember-device">
+                    <input type="checkbox" id="remember" class="checkbox">
+                    <label for="remember">Remember this device</label>
+                </div>
+
+                <!-- Sign In Button -->
+                <button class="sign-in-button">
+                    Sign In →
+                </button>
+
+                <!-- Institutional Access Section -->
+                <div class="institutional-access">
+                    <p class="access-label">INSTITUTIONAL ACCESS ONLY</p>
+                    <div class="institution-icon">🏛️</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="footer">
+        <p>© 2024 Mirpur University of Science and Technology. All Rights Reserved.</p>
+        <div class="footer-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">System Status</a>
+        </div>
+    </footer>
+
+    <!-- Simple JavaScript for password toggle -->
+    <script>
+        function togglePassword() {
+            var passwordInput = document.getElementById('password');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+            } else {
+                passwordInput.type = 'password';
+            }
+        }
+    </script>
+</body>
+
+</html>

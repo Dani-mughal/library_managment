@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - MUST Smart Library</title>
+    <!-- Link to CSS file in same directory -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Top Navigation Bar -->
+    <header class="header">
+        <div class="container">
+            <!-- Logo -->
+            <div class="logo">
+                <span class="logo-icon">📚</span>
+                <span class="logo-text">MUST<br><small>Smart Library</small></span>
+            </div>
+
+            <!-- Navigation Menu -->
+            <nav class="nav-menu">
+                <a href="#" class="nav-item">Dashboard</a>
+                <a href="#" class="nav-item">My Library</a>
+                <a href="#" class="nav-item">Departments</a>
+                <a href="#" class="nav-item">Research</a>
+                <a href="#" class="nav-item active">Profile</a>
+            </nav>
+
+            <!-- User Profile -->
+            <div class="user-profile">
+                <div class="profile-circle">👤</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Page Title -->
+            <h1 class="page-title">Find your next academic resource</h1>
+
+            <!-- Search Bar -->
+            <div class="search-bar">
+                <span class="search-icon">🔍</span>
+                <input type="text" placeholder="Search Books, Research Papers & Journals..." class="search-input">
+                <span class="voice-icon">🎤</span>
+            </div>
+
+            <!-- AI Help Button -->
+            <button class="ai-help-button">
+                <span class="sparkle-icon">✨</span>
+                Ask AI for Academic Help
+            </button>
+
+            <!-- Academic Overview Section -->
+            <section class="section">
+                <h2 class="section-title">Academic Overview</h2>
+
+                <!-- Stats Cards Grid -->
+                <div class="stats-grid">
+                    <!-- Card 1: Books Borrowed -->
+                    <div class="stat-card">
+                        <div class="stat-icon">📚</div>
+                        <div class="stat-info">
+                            <p class="stat-label">Books Borrowed</p>
+                            <p class="stat-value">12</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Research Credits -->
+                    <div class="stat-card">
+                        <div class="stat-icon">🎓</div>
+                        <div class="stat-info">
+                            <p class="stat-label">Research Credits</p>
+                            <p class="stat-value">45.5</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: Study Hours -->
+                    <div class="stat-card">
+                        <div class="stat-icon">⏰</div>
+                        <div class="stat-info">
+                            <p class="stat-label">Study Hours</p>
+                            <p class="stat-value">128</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 4: Saved Papers -->
+                    <div class="stat-card">
+                        <div class="stat-icon">📄</div>
+                        <div class="stat-info">
+                            <p class="stat-label">Saved Papers</p>
+                            <p class="stat-value">24</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Recommended Books Section -->
+            <section class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Recommended for CS Department</h2>
+                    <a href="#" class="view-all">View All</a>
+                </div>
+
+                <!-- Books Grid -->
+                <div class="books-grid">
+                    <!-- Book 1 -->
+                    <div class="book-card">
+                        <div class="book-cover" style="background: linear-gradient(135deg, #2ecc71, #27ae60);">
+                            <p class="book-cover-text">Introduction to<br>Algorithms</p>
+                        </div>
+                        <div class="book-info">
+                            <h3 class="book-title">Introduction to Algorithms</h3>
+                            <p class="book-author">Cormen & Leiserson, Stuart</p>
+                            <div class="book-tags">
+                                <span class="tag">CS</span>
+                                <span class="tag">Core</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Book 2 -->
+                    <div class="book-card">
+                        <div class="book-cover" style="background: linear-gradient(135deg, #16a085, #1abc9c);">
+                            <p class="book-cover-text">AI: A Modern<br>Approach</p>
+                        </div>
+                        <div class="book-info">
+                            <h3 class="book-title">AI: A Modern Approach</h3>
+                            <p class="book-author">Stuart Russell, Peter Norvig</p>
+                            <div class="book-tags">
+                                <span class="tag">CS</span>
+                                <span class="tag">AI</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Book 3 -->
+                    <div class="book-card">
+                        <div class="book-cover" style="background: linear-gradient(135deg, #2980b9, #3498db);">
+                            <p class="book-cover-text">Database<br>System<br>Concepts</p>
+                        </div>
+                        <div class="book-info">
+                            <h3 class="book-title">Database System Concepts</h3>
+                            <p class="book-author">Silberschatz, Korth, Sudarshan</p>
+                            <div class="book-tags">
+                                <span class="tag">IT</span>
+                                <span class="tag">DB</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Book 4 -->
+                    <div class="book-card">
+                        <div class="book-cover" style="background: linear-gradient(135deg, #f39c12, #e67e22);">
+                            <p class="book-cover-text">Computer<br>Networking</p>
+                        </div>
+                        <div class="book-info">
+                            <h3 class="book-title">Computer Networking</h3>
+                            <p class="book-author">Forouzan, Behrouz A.</p>
+                            <div class="book-tags">
+                                <span class="tag">CS</span>
+                                <span class="tag">Networks</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Departments Section -->
+            <section class="section">
+                <h2 class="section-title">MUST Departments</h2>
+
+                <!-- Department Buttons -->
+                <div class="departments-grid">
+                    <button class="dept-button">Mechanical Engineering</button>
+                    <button class="dept-button active">Computer Science & IT</button>
+                    <button class="dept-button">Electrical Engineering</button>
+                    <button class="dept-button">Civil Engineering</button>
+                    <button class="dept-button">Social Sciences</button>
+                    <button class="dept-button">Biotechnology</button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <span class="logo-icon">📚</span>
+                        <span>MUST Smart Library<br>System</span>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Resources</h4>
+                    <a href="#">Help Center</a>
+                    <a href="#">Library Policy</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <a href="#">Contact MuST</a>
+                </div>
+                <div class="footer-section">
+                    <p>© 2024 Mirpur University of Science and Technology</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>
