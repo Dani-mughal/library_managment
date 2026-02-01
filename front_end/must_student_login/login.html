@@ -40,7 +40,7 @@
             </div>
 
             <!-- Login Form Section -->
-            <div class="login-body">
+            <form id="login-form" class="login-body">
                 <!-- Description Text -->
                 <p class="login-description">
                     Access the AI-Based Smart Library System with your university credentials.
@@ -52,7 +52,7 @@
                         <span class="icon">🆔</span>
                         Student ID
                     </label>
-                    <input type="text" id="student-id" class="form-input" placeholder="e.g. MUST-2023-XXX">
+                    <input type="text" id="student-id" class="form-input" placeholder="e.g. MUST-2023-XXX" required>
                 </div>
 
                 <!-- Password Input Field -->
@@ -62,7 +62,7 @@
                         Password
                     </label>
                     <div class="password-wrapper">
-                        <input type="password" id="password" class="form-input" placeholder="••••••••">
+                        <input type="password" id="password" class="form-input" placeholder="••••••••" required>
                         <a href="#" class="forgot-link">Forgot password?</a>
                         <button type="button" class="show-password" onclick="togglePassword()">👁️</button>
                     </div>
@@ -72,11 +72,16 @@
                 <div class="remember-device">
                     <input type="checkbox" id="remember" class="checkbox">
                     <label for="remember">Remember this device</label>
-                    <a href="signup.html" > Sign Up?</a>
+                    <a href="signup.html"> Sign Up?</a>
+                </div>
+
+                <!-- Error/Success Message Display -->
+                <div id="message"
+                    style="display: none; padding: 12px; margin-bottom: 15px; border-radius: 4px; font-size: 14px;">
                 </div>
 
                 <!-- Sign In Button -->
-                <button class="sign-in-button">
+                <button type="submit" id="login-button" class="sign-in-button">
                     Sign In →
                 </button>
 
@@ -85,7 +90,7 @@
                     <p class="access-label">INSTITUTIONAL ACCESS ONLY</p>
                     <div class="institution-icon">🏛️</div>
                 </div>
-            </div>
+            </form>
         </div>
     </main>
 
@@ -99,8 +104,10 @@
         </div>
     </footer>
 
-    <!-- Simple JavaScript for password toggle -->
+    <!-- JavaScript for password toggle and login functionality -->
     <script>
+        const API_BASE_URL = 'http://localhost:3000/api';
+
         function togglePassword() {
             var passwordInput = document.getElementById('password');
             if (passwordInput.type === 'password') {
@@ -109,6 +116,78 @@
                 passwordInput.type = 'password';
             }
         }
+
+        // Show message to user
+        function showMessage(message, isError = false) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = message;
+            messageDiv.style.display = 'block';
+            messageDiv.style.backgroundColor = isError ? '#fee' : '#efe';
+            messageDiv.style.color = isError ? '#c33' : '#3c3';
+            messageDiv.style.border = isError ? '1px solid #fcc' : '1px solid #cfc';
+        }
+
+        // Handle login form submission
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Get form values
+            const studentId = document.getElementById('student-id').value.trim();
+            const password = document.getElementById('password').value;
+
+            // Basic validation
+            if (!studentId || !password) {
+                showMessage('Student ID and password are required!', true);
+                return;
+            }
+
+            // Show loading state
+            const loginButton = document.getElementById('login-button');
+            const originalText = loginButton.innerHTML;
+            loginButton.innerHTML = 'Signing in...';
+            loginButton.disabled = true;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        student_id: studentId,
+                        password: password
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Success
+                    showMessage(`Welcome back, ${data.student_name}!`, false);
+
+                    // Store user info in sessionStorage (optional)
+                    sessionStorage.setItem('student_name', data.student_name);
+                    sessionStorage.setItem('student_id', data.student_id);
+
+                    // Redirect to dashboard after 1.5 seconds
+                    setTimeout(() => {
+                        // Change this URL to your actual dashboard page
+                        window.location.href = '/must_library_landing_page/landing.html';
+                    }, 1500);
+                } else {
+                    // Error from server
+                    showMessage(data.message || 'Login failed. Please try again.', true);
+                    loginButton.innerHTML = originalText;
+                    loginButton.disabled = false;
+                }
+            } catch (error) {
+                // Network or other error
+                console.error('Login error:', error);
+                showMessage('Network error. Make sure the backend server is running on port 3000.', true);
+                loginButton.innerHTML = originalText;
+                loginButton.disabled = false;
+            }
+        });
     </script>
 </body>
 

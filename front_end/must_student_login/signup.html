@@ -39,19 +39,19 @@
                 <h1 class="login-title">MUST Student Sign Up</h1>
             </div>
 
-            <!-- Login Form Section -->
-            <div class="login-body">
+            <!-- Signup Form Section -->
+            <form id="signup-form" class="login-body">
                 <!-- Description Text -->
                 <p class="login-description">
                     Enter your details to sign up for the AI-Based Smart Library System.
                 </p>
                 <!-- Student ID Input Field -->
                 <div class="form-group">
-                    <label for="stuednt-name" class="form-label">
+                    <label for="student-name" class="form-label">
                         <span class="icon">🧑</span>
                         Student Name
                     </label>
-                    <input type="text" id="student-name" class="form-input" placeholder="e.g. MUST-2023-XXX">
+                    <input type="text" id="student-name" class="form-input" placeholder="e.g. John Doe" required>
                 </div>
                 <!-- Student ID Input Field -->
                 <div class="form-group">
@@ -59,7 +59,7 @@
                         <span class="icon">🆔</span>
                         Student ID
                     </label>
-                    <input type="text" id="student-id" class="form-input" placeholder="e.g. MUST-2023-XXX">
+                    <input type="text" id="student-id" class="form-input" placeholder="e.g. MUST-2023-XXX" required>
                 </div>
 
                 <!-- Password Input Field -->
@@ -69,8 +69,7 @@
                         Password
                     </label>
                     <div class="password-wrapper">
-                        <input type="password" id="password" class="form-input" placeholder="••••••••">
-                        <a href="#" class="forgot-link">Forgot password?</a>
+                        <input type="password" id="password" class="form-input" placeholder="••••••••" required>
                         <button type="button" class="show-password" onclick="togglePassword()">👁️</button>
                     </div>
                 </div>
@@ -79,11 +78,16 @@
                 <div class="remember-device">
                     <input type="checkbox" id="remember" class="checkbox">
                     <label for="remember">Remember this device</label>
-                    <a href="index.html"> Already have an account? Sign In</a>
+                    <a href="login.html"> Already have an account? Sign In</a>
                 </div>
 
-                <!-- Sign In Button -->
-                <button class="sign-in-button">
+                <!-- Error/Success Message Display -->
+                <div id="message"
+                    style="display: none; padding: 12px; margin-bottom: 15px; border-radius: 4px; font-size: 14px;">
+                </div>
+
+                <!-- Sign Up Button -->
+                <button type="submit" id="signup-button" class="sign-in-button">
                     Sign up →
                 </button>
 
@@ -92,7 +96,7 @@
                     <p class="access-label">INSTITUTIONAL ACCESS ONLY</p>
                     <div class="institution-icon">🏛️</div>
                 </div>
-            </div>
+            </form>
         </div>
     </main>
 
@@ -106,8 +110,10 @@
         </div>
     </footer>
 
-    <!-- Simple JavaScript for password toggle -->
+    <!-- JavaScript for password toggle and signup functionality -->
     <script>
+        const API_BASE_URL = 'http://localhost:3000/api';
+
         function togglePassword() {
             var passwordInput = document.getElementById('password');
             if (passwordInput.type === 'password') {
@@ -116,6 +122,83 @@
                 passwordInput.type = 'password';
             }
         }
+
+        // Show message to user
+        function showMessage(message, isError = false) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = message;
+            messageDiv.style.display = 'block';
+            messageDiv.style.backgroundColor = isError ? '#fee' : '#efe';
+            messageDiv.style.color = isError ? '#c33' : '#3c3';
+            messageDiv.style.border = isError ? '1px solid #fcc' : '1px solid #cfc';
+        }
+
+        // Handle signup form submission
+        document.getElementById('signup-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Get form values
+            const studentName = document.getElementById('student-name').value.trim();
+            const studentId = document.getElementById('student-id').value.trim();
+            const password = document.getElementById('password').value;
+
+            // Basic validation
+            if (!studentName || !studentId || !password) {
+                showMessage('All fields are required!', true);
+                return;
+            }
+
+            if (password.length < 6) {
+                showMessage('Password must be at least 6 characters long!', true);
+                return;
+            }
+
+            // Show loading state
+            const signupButton = document.getElementById('signup-button');
+            const originalText = signupButton.innerHTML;
+            signupButton.innerHTML = 'Creating account...';
+            signupButton.disabled = true;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/signup`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        student_name: studentName,
+                        student_id: studentId,
+                        password: password
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Success
+                    showMessage(data.message || 'Account created successfully!', false);
+
+                    // Clear form
+                    document.getElementById('signup-form').reset();
+
+                    // Redirect to login after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 2000);
+                } else {
+                    // Error from server
+                    showMessage(data.message || 'Signup failed. Please try again.', true);
+                    signupButton.innerHTML = originalText;
+                    signupButton.disabled = false;
+                }
+            } catch (error) {
+                // Network or other error
+                console.error('Signup error:', error);
+                showMessage('Network error. Make sure the backend server is running on port 3000.', true);
+                signupButton.innerHTML = originalText;
+                signupButton.disabled = false;
+            }
+        });
     </script>
 </body>
 
