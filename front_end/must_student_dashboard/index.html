@@ -13,7 +13,7 @@
     <header class="nav-shell">
         <div class="nav-container">
             <a href="/" class="logo-brand">
-                <img src="/front_end/images/logo.png" alt="MUST">
+                <img src="/images/logo.png" alt="MUST">
                 <div>
                     <div style="font-weight: 700; font-size: 1.1rem; line-height: 1.2;">MUST Central</div>
                     <div style="font-size: 0.75rem; letter-spacing: 1px; color: var(--accent);">STUDENT PORTAL</div>
@@ -60,11 +60,28 @@
                 if (!response.ok) throw new Error('Fragment not found');
 
                 const content = await response.text();
-                document.getElementById('mainContent').innerHTML = content;
+                const contentArea = document.getElementById('mainContent');
+                contentArea.innerHTML = content;
+
+                // Extract and execute scripts from the loaded content
+                const scripts = contentArea.querySelectorAll('script');
+                scripts.forEach(oldScript => {
+                    const newScript = document.createElement('script');
+                    if (oldScript.src) {
+                        newScript.src = oldScript.src;
+                    } else {
+                        newScript.textContent = oldScript.textContent;
+                    }
+                    oldScript.parentNode.replaceChild(newScript, oldScript);
+                });
 
                 // Post-load initialization
                 if (view === 'profile') {
-                    updateProfileData();
+                    // Wait a bit for scripts to execute
+                    setTimeout(() => {
+                        if (typeof updateProfileData === 'function') updateProfileData();
+                        if (typeof loadBorrowedBooks === 'function') loadBorrowedBooks();
+                    }, 100);
                 }
             } catch (error) {
                 console.error('Error loading view:', error);

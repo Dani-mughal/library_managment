@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Library UI Integration Test</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 40px;
+            line-height: 1.6;
+            background: #f0f2f5;
+        }
+
+        .test-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: auto;
+        }
+
+        h1 {
+            color: #1a237e;
+        }
+
+        .step {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-left: 5px solid #ffd700;
+            background: #fffde7;
+        }
+
+        .btn {
+            display: inline-block;
+            background: #1a237e;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .status {
+            font-weight: bold;
+            color: green;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="test-card">
+        <h1>Integration Test Suite</h1>
+        <p>Follow these steps to verify all new features locally.</p>
+
+        <div class="step">
+            <h3>1. Verify Dashboard Catalog</h3>
+            <p>Ensure the dashboard loads books from the database and displays generated covers.</p>
+            <a href="/must_student_dashboard/index.html" target="_blank" class="btn">Open Dashboard</a>
+        </div>
+
+        <div class="step">
+            <h3>2. Verify Search Functionality</h3>
+            <p>In the dashboard, type <strong>"Clean"</strong> or <strong>"Python"</strong>. The list should filter
+                instantly.</p>
+        </div>
+
+        <div class="step">
+            <h3>3. Verify Book Details Redirection</h3>
+            <p>Click on <strong>"Clean Code"</strong> in the dashboard. It should take you to the details page with
+                <code>?id=1</code> in the URL.</p>
+        </div>
+
+        <div class="step">
+            <h3>4. Verify Detail Data</h3>
+            <p>On the details page, verify that the <strong>AI Book Insights</strong> and <strong>Description</strong>
+                match the software engineering content.</p>
+        </div>
+
+        <div class="step">
+            <h3>5. Verify Assets</h3>
+            <p>Check if the book cover images are loading properly (no broken image icons).</p>
+        </div>
+
+        <hr>
+        <p>Backend Status: <span id="serverStatus">Checking...</span></p>
+    </div>
+
+    <script>
+        fetch('/api/auth/signup', { method: 'GET' }) // Simple ping
+            .then(() => document.getElementById('serverStatus').innerHTML = '✅ Online (Port 3000)')
+            .catch(() => document.getElementById('serverStatus').innerHTML = '❌ Offline (Start backend server)');
+    </script>
+</body>
+
+</html>

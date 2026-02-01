@@ -4,6 +4,8 @@ require('dotenv').config();
 
 // Import routes
 const authRoutes = require('./routes/auth');
+const bookRoutes = require('./routes/books');
+const borrowingRoutes = require('./routes/borrowings');
 
 // Initialize Express app
 const app = express();
@@ -21,6 +23,8 @@ app.use(express.static(path.join(__dirname, '../front_end')));
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/books', bookRoutes);
+app.use('/api/borrowings', borrowingRoutes);
 
 // Root endpoint - Redirect to landing page
 app.get('/', (req, res) => {

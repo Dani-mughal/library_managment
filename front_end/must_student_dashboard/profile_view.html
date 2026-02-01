@@ -1,50 +1,132 @@
-<div class="view-section">
-    <div class="profile-grid">
-        <div class="student-card">
-            <div class="avatar-large">👤</div>
-            <h2 id="profileName">Student Name</h2>
-            <p id="profileId" style="color: var(--text-muted); margin-bottom: 1.5rem;">MUST-2024-XXX</p>
+<div class="view-section" style="animation: fadeIn 0.5s ease-out;">
+    <h1 style="margin-bottom: 2rem; font-size: 2rem; font-weight: 700; color: var(--primary);">My Library Profile</h1>
 
-            <div style="text-align: left; background: #f9f9f9; padding: 1rem; border-radius: 12px;">
-                <p style="font-size: 0.85rem; margin-bottom: 5px;"><strong>Department:</strong> CS & IT</p>
-                <p style="font-size: 0.85rem; margin-bottom: 5px;"><strong>Join Date:</strong> Feb 2024</p>
-                <p style="font-size: 0.85rem;"><strong>Status:</strong> Active</p>
+    <!-- Student Information Card -->
+    <div
+        style="background: white; padding: 30px; border-radius: 12px; margin-bottom: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        <div style="display: flex; align-items: center; gap: 20px;">
+            <div
+                style="width: 80px; height: 80px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: bold;">
+                👤
+            </div>
+            <div>
+                <h2 id="profileName" style="margin: 0; font-size: 1.5rem; color: var(--primary);">Student Name</h2>
+                <p id="profileId" style="margin: 5px 0 0 0; color: #666; font-size: 1rem;">MUST-2024-XXX</p>
+                <p style="margin: 5px 0 0 0; color: #999; font-size: 0.9rem;">📧 student@must.edu.pk</p>
             </div>
         </div>
+    </div>
 
-        <div class="borrowed-list">
-            <h2 style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px;">
-                <span>📚</span> Currently Borrowed Books
-            </h2>
+    <!-- Borrowed Books Section -->
+    <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        <h3 style="margin-top: 0; color: var(--primary); font-size: 1.3rem; margin-bottom: 20px;">
+            📚 Currently Borrowed Books
+        </h3>
 
-            <table style="width: 100%; border-collapse: collapse;">
-                <thead>
-                    <tr style="text-align: left; color: var(--text-muted); border-bottom: 1px solid #eee;">
-                        <th style="padding: 12px 0;">Book Title</th>
-                        <th>Borrow Date</th>
-                        <th>Due Date</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr style="border-bottom: 1px solid #f9f9f9;">
-                        <td style="padding: 15px 0; font-weight: 600;">Clean Code</td>
-                        <td>25 Jan 2024</td>
-                        <td>08 Feb 2024</td>
-                        <td><span
-                                style="color: #2e7d32; background: #e8f5e9; padding: 3px 8px; border-radius: 5px; font-size: 11px;">ACTIVE</span>
-                        </td>
-                    </tr>
-                    <tr style="border-bottom: 1px solid #f9f9f9;">
-                        <td style="padding: 15px 0; font-weight: 600;">Algorithm Design</td>
-                        <td>28 Jan 2024</td>
-                        <td>11 Feb 2024</td>
-                        <td><span
-                                style="color: #2e7d32; background: #e8f5e9; padding: 3px 8px; border-radius: 5px; font-size: 11px;">ACTIVE</span>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+        <div id="borrowedBooksContainer">
+            <!-- Loading state -->
+            <p style="text-align: center; color: #999;">Loading your borrowed books...</p>
         </div>
     </div>
 </div>
+
+<script>
+    // Update profile information from session
+    function updateProfileData() {
+        const name = sessionStorage.getItem('student_name') || 'Guest Student';
+        const id = sessionStorage.getItem('student_id') || 'MUST-2024-OFFLINE';
+
+        document.getElementById('profileName').textContent = name;
+        document.getElementById('profileId').textContent = id;
+    }
+
+    // Fetch and display borrowed books
+    async function loadBorrowedBooks() {
+        const studentId = sessionStorage.getItem('student_id');
+
+        if (!studentId) {
+            document.getElementById('borrowedBooksContainer').innerHTML =
+                '<p style="text-align: center; color: #e74c3c;">Please login to view your borrowed books.</p>';
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/borrowings/${studentId}`);
+            const data = await response.json();
+
+            if (data.success && data.borrowings.length > 0) {
+                displayBorrowedBooks(data.borrowings);
+            } else {
+                document.getElementById('borrowedBooksContainer').innerHTML =
+                    '<p style="text-align: center; color: #999; padding: 40px 0;">You haven\'t borrowed any books yet. Visit the Dashboard to browse available books!</p>';
+            }
+        } catch (error) {
+            console.error('Error loading borrowed books:', error);
+            document.getElementById('borrowedBooksContainer').innerHTML =
+                '<p style="text-align: center; color: #e74c3c;">Error loading borrowed books. Please try again later.</p>';
+        }
+    }
+
+    // Display borrowed books in a table
+    function displayBorrowedBooks(borrowings) {
+        const today = new Date();
+
+        const html = `
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="background: #f8f9fa; border-bottom: 2px solid var(--primary);">
+                        <th style="padding: 12px; text-align: left;">Book</th>
+                        <th style="padding: 12px; text-align: left;">Author</th>
+                        <th style="padding: 12px; text-align: left;">Borrowed</th>
+                        <th style="padding: 12px; text-align: left;">Due Date</th>
+                        <th style="padding: 12px; text-align: left;">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${borrowings.map(book => {
+            const dueDate = new Date(book.due_date);
+            const isOverdue = today > dueDate && book.status === 'active';
+            const borrowedDate = new Date(book.borrowed_date).toLocaleDateString();
+            const dueDateStr = dueDate.toLocaleDateString();
+
+            let statusBadge = '';
+            if (book.status === 'returned') {
+                statusBadge = '<span style="background: #27ae60; color: white; padding: 4px 12px; border-radius: 12px; font-size: 0.85rem;">Returned</span>';
+            } else if (isOverdue) {
+                statusBadge = '<span style="background: #e74c3c; color: white; padding: 4px 12px; border-radius: 12px; font-size: 0.85rem;">Overdue</span>';
+            } else {
+                statusBadge = '<span style="background: #3498db; color: white; padding: 4px 12px; border-radius: 12px; font-size: 0.85rem;">Active</span>';
+            }
+
+            return `
+                            <tr style="border-bottom: 1px solid #eee;">
+                                <td style="padding: 15px;">
+                                    <div style="display: flex; align-items: center; gap: 15px;">
+                                        ${book.image_url
+                    ? `<img src="${book.image_url}" alt="${book.title}" style="width: 50px; height: 70px; object-fit: cover; border-radius: 4px;">`
+                    : `<div style="width: 50px; height: 70px; background: ${book.cover_color}; border-radius: 4px;"></div>`
+                }
+                                        <div>
+                                            <div style="font-weight: 600; color: var(--primary);">${book.title}</div>
+                                            <div style="font-size: 0.85rem; color: #999;">${book.department}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="padding: 15px; color: #666;">${book.author}</td>
+                                <td style="padding: 15px; color: #666;">${borrowedDate}</td>
+                                <td style="padding: 15px; color: ${isOverdue ? '#e74c3c' : '#666'}; font-weight: ${isOverdue ? '600' : 'normal'};">${dueDateStr}</td>
+                                <td style="padding: 15px;">${statusBadge}</td>
+                            </tr>
+                        `;
+        }).join('')}
+                </tbody>
+            </table>
+        `;
+
+        document.getElementById('borrowedBooksContainer').innerHTML = html;
+    }
+
+    // Initialize on load
+    updateProfileData();
+    loadBorrowedBooks();
+</script>
