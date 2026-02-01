@@ -4,213 +4,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Dashboard - MUST Smart Library</title>
-    <!-- Link to CSS file in same directory -->
-    <link rel="stylesheet" href="style.css">
+    <title>MUST Student Hub - Smart Library</title>
+    <!-- Combined CSS for all sections -->
+    <link rel="stylesheet" href="dashboard.css">
 </head>
 
 <body>
-    <!-- Top Navigation Bar -->
-    <header class="header">
-        <div class="container">
-            <!-- Logo -->
-            <div class="logo">
-                <span class="logo-icon">📚</span>
-                <span class="logo-text">MUST<br><small>Smart Library</small></span>
-            </div>
+    <header class="nav-shell">
+        <div class="nav-container">
+            <a href="/" class="logo-brand">
+                <img src="/front_end/images/logo.png" alt="MUST">
+                <div>
+                    <div style="font-weight: 700; font-size: 1.1rem; line-height: 1.2;">MUST Central</div>
+                    <div style="font-size: 0.75rem; letter-spacing: 1px; color: var(--accent);">STUDENT PORTAL</div>
+                </div>
+            </a>
 
-            <!-- Navigation Menu -->
-            <nav class="nav-menu">
-                <a href="#" class="nav-item">Dashboard</a>
-                <a href="#" class="nav-item">My Library</a>
-                <a href="#" class="nav-item">Departments</a>
-                <a href="#" class="nav-item">Research</a>
-                <a href="#" class="nav-item active">Profile</a>
+            <nav class="nav-links">
+                <a href="javascript:void(0)" class="nav-link active" onclick="loadView('dashboard', this)">Dashboard</a>
+                <a href="javascript:void(0)" class="nav-link" onclick="loadView('chatbot', this)">AI Assistant</a>
+                <a href="javascript:void(0)" class="nav-link" onclick="loadView('profile', this)">My Library</a>
             </nav>
 
-            <!-- User Profile -->
-            <div class="user-profile">
-                <div class="profile-circle">👤</div>
+            <div class="user-meta" id="headerUser">
+                <span id="headerName">Student</span>
+                <div style="width: 32px; height: 32px; background: var(--accent); color: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer;"
+                    title="Profile">
+                    👤
+                </div>
+                <button onclick="logout()"
+                    style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; margin-left: 10px; transition: var(--transition);">
+                    Logout
+                </button>
             </div>
         </div>
     </header>
 
-    <!-- Main Content Area -->
-    <main class="main-content">
-        <div class="container">
-            <!-- Page Title -->
-            <h1 class="page-title">Find your next academic resource</h1>
-
-            <!-- Search Bar -->
-            <div class="search-bar">
-                <span class="search-icon">🔍</span>
-                <input type="text" placeholder="Search Books, Research Papers & Journals..." class="search-input">
-                <span class="voice-icon">🎤</span>
-            </div>
-
-            <!-- AI Help Button -->
-            <button class="ai-help-button">
-                <span class="sparkle-icon">✨</span>
-                Ask AI for Academic Help
-            </button>
-
-            <!-- Academic Overview Section -->
-            <section class="section">
-                <h2 class="section-title">Academic Overview</h2>
-
-                <!-- Stats Cards Grid -->
-                <div class="stats-grid">
-                    <!-- Card 1: Books Borrowed -->
-                    <div class="stat-card">
-                        <div class="stat-icon">📚</div>
-                        <div class="stat-info">
-                            <p class="stat-label">Books Borrowed</p>
-                            <p class="stat-value">12</p>
-                        </div>
-                    </div>
-
-                    <!-- Card 2: Research Credits -->
-                    <div class="stat-card">
-                        <div class="stat-icon">🎓</div>
-                        <div class="stat-info">
-                            <p class="stat-label">Research Credits</p>
-                            <p class="stat-value">45.5</p>
-                        </div>
-                    </div>
-
-                    <!-- Card 3: Study Hours -->
-                    <div class="stat-card">
-                        <div class="stat-icon">⏰</div>
-                        <div class="stat-info">
-                            <p class="stat-label">Study Hours</p>
-                            <p class="stat-value">128</p>
-                        </div>
-                    </div>
-
-                    <!-- Card 4: Saved Papers -->
-                    <div class="stat-card">
-                        <div class="stat-icon">📄</div>
-                        <div class="stat-info">
-                            <p class="stat-label">Saved Papers</p>
-                            <p class="stat-value">24</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Recommended Books Section -->
-            <section class="section">
-                <div class="section-header">
-                    <h2 class="section-title">Recommended for CS Department</h2>
-                    <a href="#" class="view-all">View All</a>
-                </div>
-
-                <!-- Books Grid -->
-                <div class="books-grid">
-                    <!-- Book 1 -->
-                    <div class="book-card">
-                        <div class="book-cover" style="background: linear-gradient(135deg, #2ecc71, #27ae60);">
-                            <p class="book-cover-text">Introduction to<br>Algorithms</p>
-                        </div>
-                        <div class="book-info">
-                            <h3 class="book-title">Introduction to Algorithms</h3>
-                            <p class="book-author">Cormen & Leiserson, Stuart</p>
-                            <div class="book-tags">
-                                <span class="tag">CS</span>
-                                <span class="tag">Core</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Book 2 -->
-                    <div class="book-card">
-                        <div class="book-cover" style="background: linear-gradient(135deg, #16a085, #1abc9c);">
-                            <p class="book-cover-text">AI: A Modern<br>Approach</p>
-                        </div>
-                        <div class="book-info">
-                            <h3 class="book-title">AI: A Modern Approach</h3>
-                            <p class="book-author">Stuart Russell, Peter Norvig</p>
-                            <div class="book-tags">
-                                <span class="tag">CS</span>
-                                <span class="tag">AI</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Book 3 -->
-                    <div class="book-card">
-                        <div class="book-cover" style="background: linear-gradient(135deg, #2980b9, #3498db);">
-                            <p class="book-cover-text">Database<br>System<br>Concepts</p>
-                        </div>
-                        <div class="book-info">
-                            <h3 class="book-title">Database System Concepts</h3>
-                            <p class="book-author">Silberschatz, Korth, Sudarshan</p>
-                            <div class="book-tags">
-                                <span class="tag">IT</span>
-                                <span class="tag">DB</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Book 4 -->
-                    <div class="book-card">
-                        <div class="book-cover" style="background: linear-gradient(135deg, #f39c12, #e67e22);">
-                            <p class="book-cover-text">Computer<br>Networking</p>
-                        </div>
-                        <div class="book-info">
-                            <h3 class="book-title">Computer Networking</h3>
-                            <p class="book-author">Forouzan, Behrouz A.</p>
-                            <div class="book-tags">
-                                <span class="tag">CS</span>
-                                <span class="tag">Networks</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Departments Section -->
-            <section class="section">
-                <h2 class="section-title">MUST Departments</h2>
-
-                <!-- Department Buttons -->
-                <div class="departments-grid">
-                    <button class="dept-button">Mechanical Engineering</button>
-                    <button class="dept-button active">Computer Science & IT</button>
-                    <button class="dept-button">Electrical Engineering</button>
-                    <button class="dept-button">Civil Engineering</button>
-                    <button class="dept-button">Social Sciences</button>
-                    <button class="dept-button">Biotechnology</button>
-                </div>
-            </section>
+    <main class="main-stage" id="mainContent">
+        <!-- Content will be injected here -->
+        <div style="display: flex; justify-content: center; align-items: center; height: 60vh;">
+            <p>Loading MUST Student Library...</p>
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <div class="footer-logo">
-                        <span class="logo-icon">📚</span>
-                        <span>MUST Smart Library<br>System</span>
-                    </div>
-                </div>
-                <div class="footer-section">
-                    <h4>Resources</h4>
-                    <a href="#">Help Center</a>
-                    <a href="#">Library Policy</a>
-                </div>
-                <div class="footer-section">
-                    <h4>Contact</h4>
-                    <a href="#">Contact MuST</a>
-                </div>
-                <div class="footer-section">
-                    <p>© 2024 Mirpur University of Science and Technology</p>
-                </div>
-            </div>
-        </div>
-    </footer>
+    <script>
+        // Simple View Router for fragments
+        async function loadView(view, element) {
+            // Update active link styling
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            if (element) element.classList.add('active');
+
+            try {
+                // Fetch the HTML fragment
+                const response = await fetch(`${view}_view.html`);
+                if (!response.ok) throw new Error('Fragment not found');
+
+                const content = await response.text();
+                document.getElementById('mainContent').innerHTML = content;
+
+                // Post-load initialization
+                if (view === 'profile') {
+                    updateProfileData();
+                }
+            } catch (error) {
+                console.error('Error loading view:', error);
+                document.getElementById('mainContent').innerHTML = `
+                    <div style="text-align:center; padding-top: 50px;">
+                        <h2>Oops! Fragment not found.</h2>
+                        <p>Make sure ${view}_view.html exists in the dashboard folder.</p>
+                    </div>`;
+            }
+        }
+
+        // Inject session data into the UI
+        function updateProfileData() {
+            const name = sessionStorage.getItem('student_name') || 'Guest Student';
+            const id = sessionStorage.getItem('student_id') || 'MUST-2024-OFFLINE';
+
+            const profileName = document.getElementById('profileName');
+            const profileId = document.getElementById('profileId');
+
+            if (profileName) profileName.textContent = name;
+            if (profileId) profileId.textContent = id;
+        }
+
+        // Logout function
+        function logout() {
+            sessionStorage.clear();
+            window.location.href = '../must_student_login/login.html';
+        }
+
+        // Security Check: Redirect if not logged in
+        function checkSession() {
+            if (!sessionStorage.getItem('student_id')) {
+                window.location.href = '../must_student_login/login.html';
+            }
+        }
+
+        // Initialize on load
+        window.onload = () => {
+            checkSession();
+
+            const name = sessionStorage.getItem('student_name') || 'Student';
+            document.getElementById('headerName').textContent = name.split(' ')[0]; // Show first name
+
+            // Load dashboard by default
+            loadView('dashboard', document.querySelector('.nav-link.active'));
+        };
+    </script>
 </body>
 
 </html>
