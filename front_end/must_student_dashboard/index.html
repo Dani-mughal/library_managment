@@ -5,57 +5,60 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MUST Student Hub - Smart Library</title>
-    <!-- Combined CSS for all sections -->
     <link rel="stylesheet" href="dashboard.css">
 </head>
 
 <body>
-    <header class="nav-shell">
+    <!-- Navigation Bar -->
+    <header class="app-nav">
         <div class="nav-container">
-            <a href="/" class="logo-brand">
+            <!-- Logo -->
+            <a href="/" class="nav-logo">
                 <img src="/images/logo.png" alt="MUST">
-                <div>
-                    <div style="font-weight: 700; font-size: 1.1rem; line-height: 1.2;">MUST Central</div>
-                    <div style="font-size: 0.75rem; letter-spacing: 1px; color: var(--accent);">STUDENT PORTAL</div>
-                </div>
+                <span>MUST Central</span>
             </a>
 
-            <nav class="nav-links">
+            <!-- Desktop Navigation Links -->
+            <div class="nav-links">
                 <a href="javascript:void(0)" class="nav-link active" onclick="loadView('dashboard', this)">Dashboard</a>
                 <a href="javascript:void(0)" class="nav-link" onclick="loadView('chatbot', this)">AI Assistant</a>
                 <a href="javascript:void(0)" class="nav-link" onclick="loadView('profile', this)">My Library</a>
-            </nav>
+            </div>
 
-            <div class="user-meta" id="headerUser">
-                <span id="headerName">Student</span>
-                <div style="width: 32px; height: 32px; background: var(--accent); color: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer;"
-                    title="Profile">
+            <!-- Mobile Menu Toggle -->
+            <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16">
+                    </path>
+                </svg>
+            </button>
+
+            <!-- User Info -->
+            <div class="nav-user">
+                <div class="nav-user-avatar" id="headerAvatar">
                     👤
                 </div>
-                <button onclick="logout()"
-                    style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; margin-left: 10px; transition: var(--transition);">
-                    Logout
-                </button>
+                <span id="headerName">Student</span>
+                <button class="btn btn-sm btn-secondary" onclick="logout()">Logout</button>
             </div>
         </div>
     </header>
 
-    <main class="main-stage" id="mainContent">
-        <!-- Content will be injected here -->
-        <div style="display: flex; justify-content: center; align-items: center; height: 60vh;">
-            <p>Loading MUST Student Library...</p>
+    <!-- Main Content Area -->
+    <main class="main-content" id="mainContent">
+        <div class="loading">
+            Loading...
         </div>
     </main>
 
     <script>
-        // Simple View Router for fragments
+        // View Router
         async function loadView(view, element) {
-            // Update active link styling
+            // Update active link
             document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
             if (element) element.classList.add('active');
 
             try {
-                // Fetch the HTML fragment
                 const response = await fetch(`${view}_view.html`);
                 if (!response.ok) throw new Error('Fragment not found');
 
@@ -63,7 +66,7 @@
                 const contentArea = document.getElementById('mainContent');
                 contentArea.innerHTML = content;
 
-                // Extract and execute scripts from the loaded content
+                // Execute scripts
                 const scripts = contentArea.querySelectorAll('script');
                 scripts.forEach(oldScript => {
                     const newScript = document.createElement('script');
@@ -75,9 +78,8 @@
                     oldScript.parentNode.replaceChild(newScript, oldScript);
                 });
 
-                // Post-load initialization
+                // Profile initialization
                 if (view === 'profile') {
-                    // Wait a bit for scripts to execute
                     setTimeout(() => {
                         if (typeof updateProfileData === 'function') updateProfileData();
                         if (typeof loadBorrowedBooks === 'function') loadBorrowedBooks();
@@ -85,49 +87,72 @@
                 }
             } catch (error) {
                 console.error('Error loading view:', error);
-                document.getElementById('mainContent').innerHTML = `
-                    <div style="text-align:center; padding-top: 50px;">
-                        <h2>Oops! Fragment not found.</h2>
+                contentArea.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">❌</div>
+                        <h3>Oops! Page not found</h3>
                         <p>Make sure ${view}_view.html exists in the dashboard folder.</p>
                     </div>`;
             }
         }
 
-        // Inject session data into the UI
-        function updateProfileData() {
-            const name = sessionStorage.getItem('student_name') || 'Guest Student';
-            const id = sessionStorage.getItem('student_id') || 'MUST-2024-OFFLINE';
-
-            const profileName = document.getElementById('profileName');
-            const profileId = document.getElementById('profileId');
-
-            if (profileName) profileName.textContent = name;
-            if (profileId) profileId.textContent = id;
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            if (navLinks.style.display === 'flex') {
+                navLinks.style.display = 'none';
+            } else {
+                navLinks.style.display = 'flex';
+                navLinks.style.flexDirection = 'column';
+                navLinks.style.position = 'absolute';
+                navLinks.style.top = '100%';
+                navLinks.style.left = '0';
+                navLinks.style.right = '0';
+                navLinks.style.background = 'white';
+                navLinks.style.boxShadow = 'var(--shadow-lg)';
+                navLinks.style.padding = 'var(--space-4)';
+                navLinks.style.gap = 'var(--space-2)';
+            }
         }
 
-        // Logout function
+        // Logout
         function logout() {
-            sessionStorage.clear();
-            window.location.href = '../must_student_login/login.html';
+            if (confirm('Are you sure you want to logout?')) {
+                sessionStorage.clear();
+                window.location.href = '../must_student_login/login.html';
+            }
         }
 
-        // Security Check: Redirect if not logged in
+        // Session check
         function checkSession() {
             if (!sessionStorage.getItem('student_id')) {
                 window.location.href = '../must_student_login/login.html';
             }
         }
 
-        // Initialize on load
+        // Initialize
         window.onload = () => {
             checkSession();
 
             const name = sessionStorage.getItem('student_name') || 'Student';
-            document.getElementById('headerName').textContent = name.split(' ')[0]; // Show first name
+            const firstName = name.split(' ')[0];
+            document.getElementById('headerName').textContent = firstName;
+            document.getElementById('headerAvatar').textContent = firstName.charAt(0).toUpperCase();
 
-            // Load dashboard by default
+            // Load dashboard
             loadView('dashboard', document.querySelector('.nav-link.active'));
         };
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function (event) {
+            const navLinks = document.querySelector('.nav-links');
+            const toggle = document.querySelector('.mobile-menu-toggle');
+            if (!navLinks.contains(event.target) && !toggle.contains(event.target)) {
+                if (window.innerWidth < 640) {
+                    navLinks.style.display = 'none';
+                }
+            }
+        });
     </script>
 </body>
 

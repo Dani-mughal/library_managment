@@ -1,22 +1,23 @@
-<div class="view-section" style="animation: fadeIn 0.5s ease-out;">
-    <h1 style="margin-bottom: 2rem; font-size: 2rem; font-weight: 700; color: var(--primary);">MUST Central Library
-        Catalog</h1>
-
-    <div class="search-wrapper">
-        <div class="search-input-group">
-            <span class="icon">🔍</span>
-            <input type="text" id="librarySearch" onkeyup="filterBooks()"
-                placeholder="Search thousands of physical books in the Central Library...">
-        </div>
-        <button class="btn-primary"
-            style="padding: 10px 25px; border-radius: 8px; background: var(--primary); color: white; border: none; cursor: pointer; font-weight: 600; transition: var(--transition);">Search
-            Catalog</button>
+<div class="view-section">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1 class="page-title">📚 MUST Central Library Catalog</h1>
+        <p class="page-subtitle">Browse and borrow from our collection of software engineering books</p>
     </div>
 
+    <!-- Search Bar -->
+    <div class="search-wrapper">
+        <div class="search-input-group">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="librarySearch" onkeyup="filterBooks()"
+                placeholder="Search by title, author, or topic...">
+        </div>
+    </div>
+
+    <!-- Book Grid -->
     <div class="book-shelf" id="bookShelf">
-        <!-- Books will be loaded here dynamically -->
-        <div style="grid-column: 1/-1; text-align: center; padding: 50px;">
-            <p>Loading library catalog...</p>
+        <div class="loading">
+            Loading library catalog...
         </div>
     </div>
 </div>
@@ -34,35 +35,54 @@
                 window.allBooks = data.books;
                 displayBooks(window.allBooks);
             } else {
-                document.getElementById('bookShelf').innerHTML = '<p>Error loading books.</p>';
+                document.getElementById('bookShelf').innerHTML = `
+                    <div class="empty-state" style="grid-column: 1/-1;">
+                        <div class="empty-state-icon">📚</div>
+                        <h3>Error loading books</h3>
+                        <p>Please try refreshing the page</p>
+                    </div>`;
             }
         } catch (error) {
             console.error('Fetch error:', error);
-            document.getElementById('bookShelf').innerHTML = '<p>Connection error.</p>';
+            document.getElementById('bookShelf').innerHTML = `
+                <div class="empty-state" style="grid-column: 1/-1;">
+                    <div class="empty-state-icon">⚠️</div>
+                    <h3>Connection error</h3>
+                    <p>Could not connect to the server. Please check your connection.</p>
+                </div>`;
         }
     }
 
     function displayBooks(books) {
         const shelf = document.getElementById('bookShelf');
+
         if (books.length === 0) {
-            shelf.innerHTML = '<p style="grid-column: 1/-1; text-align: center;">No books found matching your search.</p>';
+            shelf.innerHTML = `
+                <div class="empty-state" style="grid-column: 1/-1;">
+                    <div class="empty-state-icon">🔍</div>
+                    <h3>No books found</h3>
+                    <p>Try adjusting your search criteria</p>
+                </div>`;
             return;
         }
 
         shelf.innerHTML = books.map(book => `
             <div class="book-item" onclick="viewBookDetails(${book.id})">
-                <div class="book-cover-art" style="${book.image_url ? 'background: white;' : 'background: ' + (book.cover_color || 'linear-gradient(135deg, #1e3c72, #2a5298)') + ';'}">
+                <div class="book-cover-art">
                     ${book.image_url
-                ? `<img src="${book.image_url}" alt="${book.title}" style="width: 100%; height: 100%; object-fit: contain;">`
-                : `<span style="font-size: 1.1rem; font-weight: 700; text-align:center;">${book.title}</span>`
+                ? `<img src="${book.image_url}" alt="${book.title}">`
+                : `<span>${book.title}</span>`
             }
                 </div>
                 <div class="book-details">
-                    <div class="book-title" title="${book.title}">${book.title}</div>
+                    <div class="book-title">${book.title}</div>
                     <div class="book-author">${book.author}</div>
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
-                        <span class="tag" style="background:#e3f2fd; color:#1e88e5; padding:4px 10px; border-radius:10px; font-size:11px; font-weight: 600;">${book.department}</span>
-                        <button onclick="event.stopPropagation(); borrowBook(${book.id}, '${book.title}')" class="borrow-btn" style="background: var(--accent); color: var(--primary); border: none; padding: 5px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: var(--transition);">Borrow</button>
+                    <div class="book-footer">
+                        <span class="book-tag">${book.department}</span>
+                        <button onclick="event.stopPropagation(); borrowBook(${book.id}, '${book.title.replace(/'/g, "\\'")}');" 
+                                class="borrow-btn">
+                            Borrow
+                        </button>
                     </div>
                 </div>
             </div>
@@ -81,7 +101,6 @@
     }
 
     function viewBookDetails(bookId) {
-        // Redirect to detail page with ID
         window.location.href = `/must_book_details_page/index.html?id=${bookId}`;
     }
 
@@ -105,10 +124,10 @@
             const data = await response.json();
 
             if (data.success) {
-                alert(`"${bookTitle}" borrowed successfully! Due date: ${data.due_date}`);
+                alert(`✅ "${bookTitle}" borrowed successfully!\n\nDue date: ${data.due_date}`);
                 fetchBooks(); // Refresh to show updated availability
             } else {
-                alert(`Failed to borrow book: ${data.message}`);
+                alert(`❌ ${data.message}`);
             }
         } catch (error) {
             console.error('Error borrowing book:', error);

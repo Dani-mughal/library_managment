@@ -4,151 +4,361 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MUST Student Login - Smart Library</title>
-    <!-- Link to our CSS file in the same directory -->
-    <link rel="stylesheet" href="style.css">
+    <title>Login - MUST Student Library</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #FAFAFA;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            height: 40px;
+        }
+
+        .brand-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        /* Main Content */
+        .main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .login-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            padding: 2.5rem;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .login-title {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-subtitle {
+            color: #6B7280;
+            font-size: 0.875rem;
+        }
+
+        /* Form */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #D1D5DB;
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #2563EB;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: #9CA3AF;
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.25rem;
+            color: #6B7280;
+        }
+
+        .form-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #4B5563;
+        }
+
+        .checkbox-label input {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .link {
+            color: #2563EB;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .link:hover {
+            text-decoration: underline;
+        }
+
+        /* Button */
+        .btn-primary {
+            width: 100%;
+            padding: 0.875rem 1.5rem;
+            background: #2563EB;
+            color: white;
+            border: none;
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary:hover {
+            background: #1D4ED8;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary:disabled {
+            background: #9CA3AF;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Message */
+        .message {
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+            display: none;
+        }
+
+        .message.success {
+            background: #D1FAE5;
+            color: #10B981;
+            display: block;
+        }
+
+        .message.error {
+            background: #FEE2E2;
+            color: #EF4444;
+            display: block;
+        }
+
+        /* Signup Link */
+        .signup-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #E5E7EB;
+            color: #6B7280;
+            font-size: 0.875rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .login-card {
+                padding: 2rem 1.5rem;
+            }
+
+            .login-title {
+                font-size: 1.5rem;
+            }
+
+            .form-footer {
+                flex-direction: column;
+                gap: 0.75rem;
+                align-items: flex-start;
+            }
+        }
+    </style>
 </head>
 
 <body>
-    <!-- Top Navigation Bar -->
+    <!-- Header -->
     <header class="header">
-        <div class="container">
-            <!-- Logo Section -->
-            <div class="logo">
-                <img class="logo-img" src="/front_end/images/logo.png" alt="MUST Smart Library">
-                <span class="logo-text">MUST Smart Library</span>
-            </div>
-
-            <!-- Navigation Links -->
-            <nav class="nav-links">
-                <a href="#">Home</a>
-                <a href="#">About Library</a>
-                <a href="#">Contact</a>
-                <a href="#" class="help-button">Help</a>
-            </nav>
+        <div class="header-content">
+            <img src="/images/logo.png" alt="MUST" class="logo">
+            <span class="brand-name">MUST Central Library</span>
         </div>
     </header>
 
-    <!-- Main Content Area -->
-    <main class="main-content">
-        <!-- Login Card Container -->
-        <div class="login-card">
-            <!-- Top Section with Background Image -->
-            <div class="login-header">
-                <p class="portal-label">STUDENT PORTAL</p>
-                <h1 class="login-title">MUST Student Login</h1>
-            </div>
-
-            <!-- Login Form Section -->
-            <form id="login-form" class="login-body">
-                <!-- Description Text -->
-                <p class="login-description">
-                    Access the AI-Based Smart Library System with your university credentials.
-                </p>
-
-                <!-- Student ID Input Field -->
-                <div class="form-group">
-                    <label for="student-id" class="form-label">
-                        <span class="icon">🆔</span>
-                        Student ID
-                    </label>
-                    <input type="text" id="student-id" class="form-input" placeholder="e.g. MUST-2023-XXX" required>
+    <!-- Main Content -->
+    <main class="main">
+        <div class="login-container">
+            <div class="login-card">
+                <!-- Login Header -->
+                <div class="login-header">
+                    <div class="login-icon">📚</div>
+                    <h1 class="login-title">Welcome Back</h1>
+                    <p class="login-subtitle">Sign in to access your library account</p>
                 </div>
 
-                <!-- Password Input Field -->
-                <div class="form-group">
-                    <label for="password" class="form-label">
-                        <span class="icon">🔒</span>
-                        Password
-                    </label>
-                    <div class="password-wrapper">
-                        <input type="password" id="password" class="form-input" placeholder="••••••••" required>
-                        <a href="#" class="forgot-link">Forgot password?</a>
-                        <button type="button" class="show-password" onclick="togglePassword()">👁️</button>
+                <!-- Message -->
+                <div id="message" class="message"></div>
+
+                <!-- Login Form -->
+                <form id="loginForm">
+                    <!-- Student ID -->
+                    <div class="form-group">
+                        <label for="studentId" class="form-label">Student ID</label>
+                        <input type="text" id="studentId" class="form-input" placeholder="MUST-2024-XXX" required
+                            autofocus>
                     </div>
-                </div>
 
-                <!-- Remember Device Checkbox -->
-                <div class="remember-device">
-                    <input type="checkbox" id="remember" class="checkbox">
-                    <label for="remember">Remember this device</label>
-                    <a href="signup.html"> Sign Up?</a>
-                </div>
+                    <!-- Password -->
+                    <div class="form-group">
+                        <label for="password" class="form-label">Password</label>
+                        <div class="password-wrapper">
+                            <input type="password" id="password" class="form-input" placeholder="Enter your password"
+                                required>
+                            <button type="button" class="toggle-password" onclick="togglePassword()">
+                                👁️
+                            </button>
+                        </div>
+                    </div>
 
-                <!-- Error/Success Message Display -->
-                <div id="message"
-                    style="display: none; padding: 12px; margin-bottom: 15px; border-radius: 4px; font-size: 14px;">
-                </div>
+                    <!-- Form Footer -->
+                    <div class="form-footer">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="remember">
+                            Remember me
+                        </label>
+                        <a href="#" class="link">Forgot password?</a>
+                    </div>
 
-                <!-- Sign In Button -->
-                <button type="submit" id="login-button" class="sign-in-button">
-                    Sign In →
-                </button>
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn-primary" id="loginBtn">
+                        Sign In
+                    </button>
+                </form>
 
-                <!-- Institutional Access Section -->
-                <div class="institutional-access">
-                    <p class="access-label">INSTITUTIONAL ACCESS ONLY</p>
-                    <div class="institution-icon">🏛️</div>
+                <!-- Signup Link -->
+                <div class="signup-link">
+                    Don't have an account? <a href="signup.html" class="link">Sign up</a>
                 </div>
-            </form>
+            </div>
         </div>
     </main>
 
-    <!-- Footer Section -->
-    <footer class="footer">
-        <p>© 2024 Mirpur University of Science and Technology. All Rights Reserved.</p>
-        <div class="footer-links">
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Service</a>
-            <a href="#">System Status</a>
-        </div>
-    </footer>
-
-    <!-- JavaScript for password toggle and login functionality -->
     <script>
-        const API_BASE_URL = 'http://localhost:3000/api';
-
+        // Toggle password visibility
         function togglePassword() {
-            var passwordInput = document.getElementById('password');
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-            } else {
-                passwordInput.type = 'password';
-            }
+            const passwordInput = document.getElementById('password');
+            const type = passwordInput.type === 'password' ? 'text' : 'password';
+            passwordInput.type = type;
         }
 
-        // Show message to user
-        function showMessage(message, isError = false) {
-            const messageDiv = document.getElementById('message');
-            messageDiv.textContent = message;
-            messageDiv.style.display = 'block';
-            messageDiv.style.backgroundColor = isError ? '#fee' : '#efe';
-            messageDiv.style.color = isError ? '#c33' : '#3c3';
-            messageDiv.style.border = isError ? '1px solid #fcc' : '1px solid #cfc';
+        // Show message
+        function showMessage(message, type) {
+            const messageEl = document.getElementById('message');
+            messageEl.textContent = message;
+            messageEl.className = `message ${type}`;
+            messageEl.style.display = 'block';
         }
 
-        // Handle login form submission
-        document.getElementById('login-form').addEventListener('submit', async (e) => {
+        // Hide message
+        function hideMessage() {
+            const messageEl = document.getElementById('message');
+            messageEl.style.display = 'none';
+        }
+
+        // Login form handler
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+            hideMessage();
 
-            // Get form values
-            const studentId = document.getElementById('student-id').value.trim();
+            const studentId = document.getElementById('studentId').value.trim();
             const password = document.getElementById('password').value;
+            const loginBtn = document.getElementById('loginBtn');
 
-            // Basic validation
+            // Validate
             if (!studentId || !password) {
-                showMessage('Student ID and password are required!', true);
+                showMessage('Please fill in all fields', 'error');
                 return;
             }
 
-            // Show loading state
-            const loginButton = document.getElementById('login-button');
-            const originalText = loginButton.innerHTML;
-            loginButton.innerHTML = 'Signing in...';
-            loginButton.disabled = true;
+            // Disable button
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Signing in...';
 
             try {
-                const response = await fetch(`${API_BASE_URL}/auth/login`, {
+                const response = await fetch('/api/auth/login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -161,33 +371,34 @@
 
                 const data = await response.json();
 
-                if (response.ok) {
-                    // Success
-                    showMessage(`Welcome back, ${data.student_name}!`, false);
-
-                    // Store user info in sessionStorage (optional)
-                    sessionStorage.setItem('student_name', data.student_name);
+                if (data.success) {
+                    // Store session
                     sessionStorage.setItem('student_id', data.student_id);
+                    sessionStorage.setItem('student_name', data.student_name);
 
-                    // Redirect to dashboard after 1.5 seconds
+                    showMessage('Login successful! Redirecting...', 'success');
+
+                    // Redirect to dashboard
                     setTimeout(() => {
-                        // Redirect to student dashboard
                         window.location.href = '/must_student_dashboard/index.html';
-                    }, 1500);
+                    }, 1000);
                 } else {
-                    // Error from server
-                    showMessage(data.message || 'Login failed. Please try again.', true);
-                    loginButton.innerHTML = originalText;
-                    loginButton.disabled = false;
+                    showMessage(data.message || 'Login failed', 'error');
+                    loginBtn.disabled = false;
+                    loginBtn.textContent = 'Sign In';
                 }
             } catch (error) {
-                // Network or other error
                 console.error('Login error:', error);
-                showMessage('Network error. Make sure the backend server is running on port 3000.', true);
-                loginButton.innerHTML = originalText;
-                loginButton.disabled = false;
+                showMessage('Connection error. Please try again.', 'error');
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Sign In';
             }
         });
+
+        // Check if already logged in
+        if (sessionStorage.getItem('student_id')) {
+            window.location.href = '/must_student_dashboard/index.html';
+        }
     </script>
 </body>
 

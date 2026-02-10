@@ -1,52 +1,52 @@
-<div class="view-section" style="animation: fadeIn 0.5s ease-out;">
-    <h1 style="margin-bottom: 2rem; font-size: 2rem; font-weight: 700; color: var(--primary);">My Library Profile</h1>
-
-    <!-- Student Information Card -->
-    <div
-        style="background: white; padding: 30px; border-radius: 12px; margin-bottom: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-        <div style="display: flex; align-items: center; gap: 20px;">
-            <div
-                style="width: 80px; height: 80px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: bold;">
-                👤
-            </div>
-            <div>
-                <h2 id="profileName" style="margin: 0; font-size: 1.5rem; color: var(--primary);">Student Name</h2>
-                <p id="profileId" style="margin: 5px 0 0 0; color: #666; font-size: 1rem;">MUST-2024-XXX</p>
-                <p style="margin: 5px 0 0 0; color: #999; font-size: 0.9rem;">📧 student@must.edu.pk</p>
+<div class="view-section">
+    <div class="profile-container">
+        <!-- Profile Card -->
+        <div class="profile-card">
+            <div class="profile-header">
+                <div class="profile-avatar" id="profileAvatar">
+                    👤
+                </div>
+                <div class="profile-info">
+                    <h2 id="profileName">Student Name</h2>
+                    <p id="profileId">MUST-2024-XXX</p>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- Borrowed Books Section -->
-    <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-        <h3 style="margin-top: 0; color: var(--primary); font-size: 1.3rem; margin-bottom: 20px;">
-            📚 Currently Borrowed Books
-        </h3>
-
-        <div id="borrowedBooksContainer">
-            <!-- Loading state -->
-            <p style="text-align: center; color: #999;">Loading your borrowed books...</p>
+        <!-- Borrowed Books Section -->
+        <div class="borrowings-section">
+            <h3>📖 Currently Borrowed Books</h3>
+            <div id="borrowingsContainer">
+                <div class="loading">
+                    Loading your borrowed books...
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 <script>
-    // Update profile information from session
     function updateProfileData() {
         const name = sessionStorage.getItem('student_name') || 'Guest Student';
         const id = sessionStorage.getItem('student_id') || 'MUST-2024-OFFLINE';
+        const firstName = name.split(' ')[0];
 
         document.getElementById('profileName').textContent = name;
         document.getElementById('profileId').textContent = id;
+        document.getElementById('profileAvatar').textContent = firstName.charAt(0).toUpperCase();
     }
 
-    // Fetch and display borrowed books
     async function loadBorrowedBooks() {
         const studentId = sessionStorage.getItem('student_id');
+        const container = document.getElementById('borrowingsContainer');
 
         if (!studentId) {
-            document.getElementById('borrowedBooksContainer').innerHTML =
-                '<p style="text-align: center; color: #e74c3c;">Please login to view your borrowed books.</p>';
+            container.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-state-icon">🔒</div>
+                    <h3>Not logged in</h3>
+                    <p>Please login to view your borrowed books</p>
+                </div>`;
             return;
         }
 
@@ -54,79 +54,94 @@
             const response = await fetch(`/api/borrowings/${studentId}`);
             const data = await response.json();
 
-            if (data.success && data.borrowings.length > 0) {
-                displayBorrowedBooks(data.borrowings);
+            if (data.success) {
+                if (data.borrowings.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📚</div>
+                            <h3>No books borrowed yet</h3>
+                            <p>Visit the Dashboard to browse and borrow books!</p>
+                        </div>`;
+                } else {
+                    displayBorrowings(data.borrowings);
+                }
             } else {
-                document.getElementById('borrowedBooksContainer').innerHTML =
-                    '<p style="text-align: center; color: #999; padding: 40px 0;">You haven\'t borrowed any books yet. Visit the Dashboard to browse available books!</p>';
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">⚠️</div>
+                        <h3>Error loading borrowings</h3>
+                        <p>${data.message || 'Please try again later'}</p>
+                    </div>`;
             }
         } catch (error) {
-            console.error('Error loading borrowed books:', error);
-            document.getElementById('borrowedBooksContainer').innerHTML =
-                '<p style="text-align: center; color: #e74c3c;">Error loading borrowed books. Please try again later.</p>';
+            console.error('Error fetching borrowings:', error);
+            container.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-state-icon">⚠️</div>
+                    <h3>Connection error</h3>
+                    <p>Could not load your borrowed books. Please check your connection.</p>
+                </div>`;
         }
     }
 
-    // Display borrowed books in a table
-    function displayBorrowedBooks(borrowings) {
+    function displayBorrowings(borrowings) {
+        const container = document.getElementById('borrowingsContainer');
         const today = new Date();
 
-        const html = `
-            <table style="width: 100%; border-collapse: collapse;">
-                <thead>
-                    <tr style="background: #f8f9fa; border-bottom: 2px solid var(--primary);">
-                        <th style="padding: 12px; text-align: left;">Book</th>
-                        <th style="padding: 12px; text-align: left;">Author</th>
-                        <th style="padding: 12px; text-align: left;">Borrowed</th>
-                        <th style="padding: 12px; text-align: left;">Due Date</th>
-                        <th style="padding: 12px; text-align: left;">Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${borrowings.map(book => {
-            const dueDate = new Date(book.due_date);
-            const isOverdue = today > dueDate && book.status === 'active';
-            const borrowedDate = new Date(book.borrowed_date).toLocaleDateString();
-            const dueDateStr = dueDate.toLocaleDateString();
-
-            let statusBadge = '';
-            if (book.status === 'returned') {
-                statusBadge = '<span style="background: #27ae60; color: white; padding: 4px 12px; border-radius: 12px; font-size: 0.85rem;">Returned</span>';
-            } else if (isOverdue) {
-                statusBadge = '<span style="background: #e74c3c; color: white; padding: 4px 12px; border-radius: 12px; font-size: 0.85rem;">Overdue</span>';
-            } else {
-                statusBadge = '<span style="background: #3498db; color: white; padding: 4px 12px; border-radius: 12px; font-size: 0.85rem;">Active</span>';
-            }
+        const tableHTML = `
+            <div class="borrowings-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Book</th>
+                            <th>Author</th>
+                            <th>Borrowed</th>
+                            <th>Due Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${borrowings.map(b => {
+            const dueDate = new Date(b.due_date);
+            const isOverdue = b.status === 'active' && dueDate < today;
+            const status = isOverdue ? 'overdue' : b.status;
 
             return `
-                            <tr style="border-bottom: 1px solid #eee;">
-                                <td style="padding: 15px;">
-                                    <div style="display: flex; align-items: center; gap: 15px;">
-                                        ${book.image_url
-                    ? `<img src="${book.image_url}" alt="${book.title}" style="width: 50px; height: 70px; object-fit: cover; border-radius: 4px;">`
-                    : `<div style="width: 50px; height: 70px; background: ${book.cover_color}; border-radius: 4px;"></div>`
+                                <tr>
+                                    <td>
+                                        <div class="book-info">
+                                            ${b.image_url
+                    ? `<img src="${b.image_url}" alt="${b.title}" class="book-cover-small">`
+                    : `<div class="book-cover-small"></div>`
                 }
-                                        <div>
-                                            <div style="font-weight: 600; color: var(--primary);">${book.title}</div>
-                                            <div style="font-size: 0.85rem; color: #999;">${book.department}</div>
+                                            <div class="book-text">
+                                                <h4>${b.title}</h4>
+                                                <p>${b.department}</p>
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>
-                                <td style="padding: 15px; color: #666;">${book.author}</td>
-                                <td style="padding: 15px; color: #666;">${borrowedDate}</td>
-                                <td style="padding: 15px; color: ${isOverdue ? '#e74c3c' : '#666'}; font-weight: ${isOverdue ? '600' : 'normal'};">${dueDateStr}</td>
-                                <td style="padding: 15px;">${statusBadge}</td>
-                            </tr>
-                        `;
+                                    </td>
+                                    <td>${b.author}</td>
+                                    <td>${new Date(b.borrowed_date).toLocaleDateString()}</td>
+                                    <td>${dueDate.toLocaleDateString()}</td>
+                                    <td>
+                                        <span class="status-badge status-${status}">
+                                            ${status === 'active' ? 'Active' :
+                    status === 'returned' ? 'Returned' :
+                        status === 'overdue' ? 'Overdue' : status}
+                                        </span>
+                                    </td>
+                                </tr>
+                            `;
         }).join('')}
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
         `;
 
-        document.getElementById('borrowedBooksContainer').innerHTML = html;
+        container.innerHTML = tableHTML;
     }
 
-    // Initialize on load
+    // Auto-initialize
     updateProfileData();
     loadBorrowedBooks();
 </script>
