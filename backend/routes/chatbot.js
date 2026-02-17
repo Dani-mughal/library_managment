@@ -74,24 +74,42 @@ function callGeminiAPI(messages) {
 }
 
 // Search books helper
-function searchBooks(query) {
+function getBooks(query) {
     return new Promise((resolve, reject) => {
-        // Simple search: find books with matching title, author, or topics
-        // We'll fetch top 5 matches
-        const sql = `
-            SELECT title, author, shelf_location, available_copies, topics 
-            FROM books 
-            WHERE 
-                title LIKE ? OR 
-                author LIKE ? OR 
-                topics LIKE ? OR
-                description LIKE ?
-            LIMIT 5
-        `;
-        const searchTerm = `%${query}%`;
-        db.query(sql, [searchTerm, searchTerm, searchTerm, searchTerm], (err, results) => {
+        let sql;
+        let params = [];
+        const lowerQuery = query.toLowerCase();
+
+        // Check if the user is asking for "best", "all", or "recommendations"
+        const genericKeywords = ['best', 'all', 'top', 'recommend', 'list', 'show me books', 'catalog', 'available'];
+        const isGeneric = genericKeywords.some(k => lowerQuery.includes(k));
+
+        if (isGeneric) {
+            // Fetch ALL books to give the AI complete visibility of the library
+            sql = `
+                SELECT title, author, shelf_location, available_copies, topics, department, description 
+                FROM books 
+                ORDER BY department ASC, title ASC
+            `;
+        } else {
+            // Specific search for keywords
+            sql = `
+                SELECT title, author, shelf_location, available_copies, topics, department, description 
+                FROM books 
+                WHERE 
+                    title LIKE ? OR 
+                    author LIKE ? OR 
+                    topics LIKE ? OR
+                    description LIKE ? OR
+                    department LIKE ?
+                LIMIT 15
+            `;
+            const searchTerm = `%${query}%`;
+            params = [searchTerm, searchTerm, searchTerm, searchTerm, searchTerm];
+        }
+
+        db.query(sql, params, (err, results) => {
             if (err) {
-                // If error, just return empty list, don't break the chat
                 console.error('Book search error:', err);
                 resolve([]);
             } else {
@@ -109,33 +127,38 @@ router.post('/', async (req, res) => {
     }
 
     try {
-        // 1. Search for relevant books based on the user's message
-        // This is a simple RAG (Retrieval Augmented Generation) approach
-        const books = await searchBooks(message);
+        // 1. Get relevant books from DB
+        const books = await getBooks(message);
 
         // 2. Construct context string
-        let bookContext = 'No specific books found in our catalog matching this query.';
+        let bookContext = 'No specific books found in our catalog for this exact query.';
         if (books.length > 0) {
-            bookContext = 'Here are some relevant books available in our library:\n';
+            bookContext = 'The following books are currently in our library database:\n';
             books.forEach(b => {
-                bookContext += `- "${b.title}" by ${b.author} (Shelf: ${b.shelf_location}, Available: ${b.available_copies})\n`;
+                bookContext += `- Title: ${b.title} | Author: ${b.author} | Dept: ${b.department} | Location: ${b.shelf_location} | Status: ${b.available_copies > 0 ? 'Available (' + b.available_copies + ' copies)' : 'Checked Out'}\n`;
             });
         }
 
-        // 3. Prepare messages for Gemini
-        // We assume 'history' is an array of { role: 'user'|'model', content: 'text' }
-        // We'll prepend the system prompt and context to the current interaction
+        // 3. Update System Prompt with strict formatting rules
+        const formattingRules = `
+CRITICAL FORMATTING RULES:
+1. ALWAYS use bullet points for lists of books.
+2. Use **bold text** for book titles.
+3. Keep responses clean, professional, and well-structured.
+4. If recommending books, group them by department if relevant.
+5. Provide the shelf location for every book you mention.
+`;
 
-        const fullSystemPrompt = `${systemPrompt}\n\n**Current Library Data Context:**\n${bookContext}`;
+        const fullSystemPrompt = `${systemPrompt}\n${formattingRules}\n\n**Current Library Database Context (Real-time data):**\n${bookContext}`;
 
         const apiMessages = [
-            { role: 'user', content: fullSystemPrompt }, // Instruction as first user message (or system if supported, but user is safe for Gemini Pro)
-            { role: 'model', content: 'Understood. I am the MUST Library AI. How can I help you today?' }
+            { role: 'user', content: fullSystemPrompt },
+            { role: 'model', content: 'Understood. I have access to the real-time library database and will provide well-structured, bulleted responses with bold titles and locations.' }
         ];
 
-        // Append conversation history (limit to last 5 turns to save tokens)
+        // Append recent history
         if (Array.isArray(history)) {
-            const recentHistory = history.slice(-5);
+            const recentHistory = history.slice(-6);
             recentHistory.forEach(msg => {
                 apiMessages.push({ role: msg.role === 'user' ? 'user' : 'model', content: msg.content });
             });
