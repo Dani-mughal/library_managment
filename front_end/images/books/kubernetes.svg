@@ -1,0 +1,16 @@
+<svg width="300" height="450" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#326ce5;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2a50b3;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#grad)" />
+  <text x="150" y="120" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="white" text-anchor="middle">
+    <tspan x="150" dy="0">KUBERNETES</tspan>
+    <tspan x="150" dy="35">UP &amp; RUNNING</tspan>
+  </text>
+  <line x1="50" y1="200" x2="250" y2="200" stroke="white" stroke-width="1" opacity="0.3" />
+  <text x="150" y="240" font-family="Arial, sans-serif" font-size="16" fill="white" opacity="0.8" text-anchor="middle">Kelsey Hightower</text>
+  <path d="M150,300 L170,310 L170,330 L150,340 L130,330 L130,310 Z" fill="none" stroke="white" stroke-width="2" opacity="0.5" />
+</svg>

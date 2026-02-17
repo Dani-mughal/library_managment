@@ -1,0 +1,16 @@
+<svg width="300" height="450" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f1c40f;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f39c12;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#grad)" />
+  <text x="150" y="100" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#333" text-anchor="middle">
+    <tspan x="150" dy="0">HEAD FIRST</tspan>
+    <tspan x="150" dy="30">AGILE</tspan>
+  </text>
+  <line x1="50" y1="180" x2="250" y2="180" stroke="#333" stroke-width="1" opacity="0.3" />
+  <text x="150" y="220" font-family="Arial, sans-serif" font-size="16" fill="#333" opacity="0.8" text-anchor="middle">Andrew Stellman</text>
+  <circle cx="150" cy="300" r="40" fill="none" stroke="#333" stroke-width="2" opacity="0.2" />
+</svg>
