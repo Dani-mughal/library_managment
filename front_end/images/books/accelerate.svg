@@ -1,0 +1,13 @@
+<svg width="300" height="450" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#d32f2f;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#e53935;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#grad)" />
+  <text x="150" y="140" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="white" text-anchor="middle">ACCELERATE</text>
+  <line x1="50" y1="200" x2="250" y2="200" stroke="white" stroke-width="1" opacity="0.3" />
+  <text x="150" y="240" font-family="Arial, sans-serif" font-size="16" fill="white" opacity="0.8" text-anchor="middle">Nicole Forsgren</text>
+  <path d="M130,320 L150,280 L170,320" fill="white" opacity="0.2" />
+</svg>

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Circuit Theory - MUST Smart Library</title>
+    <title>Loading Book... - MUST Smart Library</title>
     <!-- Link to CSS file in same directory -->
     <link rel="stylesheet" href="style.css">
 </head>
@@ -43,13 +43,13 @@
                     <!-- Book Cover -->
                     <div class="book-cover">
                         <div class="cover-content">
-                            <p class="cover-title">Advanced<br>Circuit<br>Theory</p>
+                            <p class="cover-title"></p>
                         </div>
                     </div>
 
                     <!-- Badge Section -->
                     <div class="badge-section">
-                        <span class="badge recommended">Engineering Core</span>
+                        <span class="badge recommended"></span>
                     </div>
 
                     <!-- Action Buttons -->
@@ -63,16 +63,24 @@
                             <span class="status-dot available"></span>
                             <span class="status-text">Currently Available</span>
                         </div>
-                        <p class="status-detail">Shelf 18, Copy#6 left - 3 physical copies remaining</p>
+                        <p class="status-detail">Loading availability...</p>
                     </div>
                 </div>
 
                 <!-- Right Side: Book Details -->
                 <div class="book-details">
                     <!-- Book Title and Info -->
-                    <h1 class="book-title">Advanced Circuit Theory & Analysis</h1>
-                    <p class="book-author">Engr. Dr. Ahmed Malik & Sarah Johnson</p>
-                    <p class="book-department">Department of Electrical Engineering | MUST Mirpur Campus</p>
+                    <h1 class="book-title">Loading...</h1>
+                    <p class="book-author">Loading...</p>
+                    <p class="book-department">Loading...</p>
+
+                    <!-- Short Summary Hook -->
+                    <div class="short-summary-section"
+                        style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; border-radius: 12px; margin: 24px 0; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);">
+                        <p class="short-summary"
+                            style="color: white; font-size: 18px; line-height: 1.6; margin: 0; font-weight: 500; font-style: italic;">
+                        </p>
+                    </div>
 
                     <!-- AI Insights Section -->
                     <div class="insights-section">
@@ -89,22 +97,12 @@
 
                         <!-- Summary Content -->
                         <div class="summary-content">
-                            <p>
-                                This comprehensive textbook covers the fundamental concepts of circuit analysis,
-                                including nodal and mesh analysis, Thevenin's and Norton's theorems, and frequency-state
-                                circuit analysis. Second edition includes new sections on digital circuit integration
-                                and power system efficiency. Aligned with the MUST Electrical of Electrical
-                                Engineering curriculum.
-                            </p>
+                            <p class="book-description">Loading description...</p>
 
                             <!-- Why Study Section -->
                             <div class="why-study">
                                 <h4>💡 Why study this book?</h4>
-                                <p>
-                                    <strong>Matches with your FE-302 alignment</strong> with your upcoming mid-term
-                                    exams in (21 days). This textbook is directly aligned with the Semester project
-                                    requirements.
-                                </p>
+                                <p class="why-study-content">Loading...</p>
                             </div>
                         </div>
 
@@ -112,10 +110,7 @@
                         <div class="topics-section">
                             <h4>Topics Covered</h4>
                             <div class="topics-tags">
-                                <span class="topic-tag">Laplace Transforms</span>
-                                <span class="topic-tag">Fourier Series</span>
-                                <span class="topic-tag">AC/DC Analysis</span>
-                                <span class="topic-tag">Network Graphs</span>
+                                <span class="topic-tag">Loading topics...</span>
                             </div>
 
                             <!-- Warning Box -->
@@ -123,7 +118,7 @@
                                 <span class="warning-icon">⚠️</span>
                                 <div>
                                     <strong>Limited Stock Warning</strong>
-                                    <p>Only books left. 14 students are in line</p>
+                                    <p class="stock-warning">Checking availability...</p>
                                 </div>
                             </div>
                         </div>
@@ -145,6 +140,39 @@
         </div>
     </footer>
     <script>
+        // ====================================
+        // HELPER FUNCTIONS
+        // ====================================
+
+        /**
+         * Safely get a value with fallback
+         */
+        function safeGet(value, fallback = 'Information not available') {
+            return (value && value.toString().trim() !== '') ? value : fallback;
+        }
+
+        /**
+         * Generate dynamic "Why Study" content based on department and topics
+         */
+        function generateWhyStudy(department, topics) {
+            const dept = safeGet(department, 'Software Engineering');
+
+            if (!topics || topics.trim() === '') {
+                return `Perfect for ${dept} students looking to expand their knowledge base.`;
+            }
+
+            const topicList = topics.split(',').map(t => t.trim()).slice(0, 3);
+            const topicsText = topicList.length > 2
+                ? topicList.slice(0, -1).join(', ') + ', and ' + topicList[topicList.length - 1]
+                : topicList.join(' and ');
+
+            return `Ideal for ${dept} students interested in ${topicsText}. This book provides comprehensive coverage of these essential topics.`;
+        }
+
+        // ====================================
+        // MAIN INITIALIZATION
+        // ====================================
+
         document.addEventListener('DOMContentLoaded', async () => {
             // Session check and user init
             checkSession();
@@ -154,7 +182,7 @@
             const bookId = urlParams.get('id');
 
             if (!bookId) {
-                alert('No book ID provided');
+                alert('No book ID provided in URL. Redirecting to dashboard.');
                 window.location.href = '/must_student_dashboard/index.html';
                 return;
             }
@@ -163,67 +191,169 @@
                 const response = await fetch(`/api/books/${bookId}`);
                 const data = await response.json();
 
-                if (data.success) {
-                    const book = data.book;
-
-                    // Update Title
-                    document.title = `${book.title} - MUST Smart Library`;
-                    document.querySelectorAll('.book-title').forEach(el => el.textContent = book.title);
-                    document.querySelector('.current').textContent = book.title;
-
-                    // Update Author and Dept
-                    document.querySelector('.book-author').textContent = book.author;
-                    document.querySelector('.book-department').textContent = `${book.department} | MUST Mirpur Campus`;
-
-                    // Update Cover
-                    const cover = document.querySelector('.book-cover');
-                    if (book.image_url) {
-                        cover.style.background = 'white';
-                        cover.innerHTML = `<img src="${book.image_url}" alt="${book.title}" style="width: 100%; height: 100%; object-fit: contain;">`;
-                    } else {
-                        // Keep text based cover if no image
-                        const coverTitle = document.querySelector('.cover-title');
-                        if (coverTitle) coverTitle.innerHTML = book.title.replace(/ /g, '<br>');
-                        cover.style.background = book.cover_color || 'linear-gradient(135deg, #1e3c72, #2a5298)';
-                    }
-
-                    // Update Description
-                    document.querySelector('.summary-content p').textContent = book.description;
-
-                    // Update Shelf and Availability
-                    document.querySelector('.status-detail').textContent = `${book.shelf_location}, Copy#${Math.floor(Math.random() * 10)} left - ${book.available_copies} physical copies remaining`;
-
-                    if (book.available_copies > 0) {
-                        document.querySelector('.status-dot').className = 'status-dot available';
-                        document.querySelector('.status-text').textContent = 'Currently Available';
-                    } else {
-                        document.querySelector('.status-dot').className = 'status-dot reserved';
-                        document.querySelector('.status-text').textContent = 'Currently Checked Out';
-                        const mainBtn = document.querySelector('.btn-primary');
-                        if (mainBtn) {
-                            mainBtn.textContent = 'Notify Me';
-                            mainBtn.disabled = true;
-                            mainBtn.style.opacity = '0.5';
-                        }
-                    }
-
-                    // Update Topics
-                    if (book.topics) {
-                        const topicsContainer = document.querySelector('.topics-tags');
-                        if (topicsContainer) {
-                            topicsContainer.innerHTML = book.topics.split(',').map(topic =>
-                                `<span class="topic-tag">${topic.trim()}</span>`
-                            ).join('');
-                        }
-                    }
-
+                if (data.success && data.book) {
+                    displayBookDetails(data.book);
                 } else {
-                    alert('Book not found');
+                    showErrorState('Book not found in database.');
                 }
             } catch (error) {
                 console.error('Error fetching book details:', error);
+                showErrorState('Failed to load book details. Please try again later.');
             }
         });
+
+        // ====================================
+        // DISPLAY BOOK DETAILS
+        // ====================================
+
+        function displayBookDetails(book) {
+            // 1. UPDATE PAGE TITLE
+            document.title = `${safeGet(book.title, 'Book Details')} - MUST Smart Library`;
+
+            // 2. UPDATE BOOK TITLE (h1)
+            const titleEl = document.querySelector('.book-title');
+            if (titleEl) titleEl.textContent = safeGet(book.title, 'Title Not Available');
+
+            // 3. UPDATE AUTHOR
+            const authorEl = document.querySelector('.book-author');
+            if (authorEl) authorEl.textContent = safeGet(book.author, 'Author Unknown');
+
+            // 4. UPDATE DEPARTMENT
+            const deptEl = document.querySelector('.book-department');
+            if (deptEl) {
+                const deptText = safeGet(book.department, 'Department Not Specified');
+                deptEl.textContent = `${deptText} | MUST Mirpur Campus`;
+            }
+
+            // 5. UPDATE DEPARTMENT BADGE
+            const badgeEl = document.querySelector('.badge');
+            if (badgeEl) {
+                badgeEl.textContent = safeGet(book.department, 'General');
+            }
+
+            // 6. UPDATE SHORT SUMMARY (Gradient Box)
+            const shortSummaryEl = document.querySelector('.short-summary');
+            const shortSummarySection = document.querySelector('.short-summary-section');
+
+            if (book.short_summary && book.short_summary.trim() !== '') {
+                if (shortSummaryEl) shortSummaryEl.textContent = book.short_summary;
+                if (shortSummarySection) shortSummarySection.style.display = 'block';
+            } else {
+                // Hide section if no summary
+                if (shortSummarySection) shortSummarySection.style.display = 'none';
+            }
+
+            // 7. UPDATE BOOK COVER (Image or Gradient)
+            const cover = document.querySelector('.book-cover');
+            const coverTitle = document.querySelector('.cover-title');
+
+            if (book.image_url && book.image_url.trim() !== '') {
+                // Show book cover image
+                cover.style.background = 'white';
+                cover.innerHTML = `<img src="${book.image_url}" alt="${safeGet(book.title, 'Book Cover')}" style="width: 100%; height: 100%; object-fit: contain;">`;
+            } else {
+                // Show gradient background with title
+                const coverColor = book.cover_color || 'linear-gradient(135deg, #1e3c72, #2a5298)';
+                cover.style.background = coverColor;
+
+                if (coverTitle && book.title) {
+                    // Split title by spaces and add line breaks
+                    coverTitle.innerHTML = book.title.split(' ').slice(0, 3).join('<br>');
+                }
+            }
+
+            // 8. UPDATE DESCRIPTION (Main paragraph)
+            const descEl = document.querySelector('.book-description');
+            if (descEl) {
+                descEl.textContent = safeGet(book.description, 'No description available for this book.');
+            }
+
+            // 9. UPDATE "WHY STUDY" SECTION (Dynamic Generation)
+            const whyStudyEl = document.querySelector('.why-study-content');
+            if (whyStudyEl) {
+                whyStudyEl.textContent = generateWhyStudy(book.department, book.topics);
+            }
+
+            // 10. UPDATE TOPICS TAGS
+            const topicsContainer = document.querySelector('.topics-tags');
+            if (topicsContainer) {
+                if (book.topics && book.topics.trim() !== '') {
+                    const topicTags = book.topics.split(',').map(topic =>
+                        `<span class="topic-tag">${topic.trim()}</span>`
+                    ).join('');
+                    topicsContainer.innerHTML = topicTags;
+                } else {
+                    topicsContainer.innerHTML = '<span class="topic-tag">No topics listed</span>';
+                }
+            }
+
+            // 11. UPDATE AVAILABILITY STATUS
+            const statusDot = document.querySelector('.status-dot');
+            const statusText = document.querySelector('.status-text');
+            const statusDetail = document.querySelector('.status-detail');
+            const borrowBtn = document.querySelector('.btn-primary');
+
+            const availableCopies = parseInt(book.available_copies) || 0;
+            const shelfLocation = safeGet(book.shelf_location, 'Location TBD');
+
+            if (availableCopies > 0) {
+                if (statusDot) statusDot.className = 'status-dot available';
+                if (statusText) statusText.textContent = 'Currently Available';
+                if (borrowBtn) {
+                    borrowBtn.textContent = 'Borrow Book';
+                    borrowBtn.disabled = false;
+                    borrowBtn.style.opacity = '1';
+                }
+            } else {
+                if (statusDot) statusDot.className = 'status-dot reserved';
+                if (statusText) statusText.textContent = 'Currently Checked Out';
+                if (borrowBtn) {
+                    borrowBtn.textContent = 'Notify When Available';
+                    borrowBtn.disabled = true;
+                    borrowBtn.style.opacity = '0.5';
+                }
+            }
+
+            if (statusDetail) {
+                statusDetail.textContent = `${shelfLocation} - ${availableCopies} physical ${availableCopies === 1 ? 'copy' : 'copies'} available`;
+            }
+
+            // 12. UPDATE STOCK WARNING
+            const stockWarning = document.querySelector('.stock-warning');
+            if (stockWarning) {
+                if (availableCopies <= 3 && availableCopies > 0) {
+                    stockWarning.textContent = `Only ${availableCopies} ${availableCopies === 1 ? 'copy' : 'copies'} left. Reserve now!`;
+                } else if (availableCopies === 0) {
+                    stockWarning.textContent = 'All copies currently checked out.';
+                } else {
+                    stockWarning.textContent = `${availableCopies} copies available.`;
+                }
+            }
+        }
+
+        // ====================================
+        // ERROR HANDLING
+        // ====================================
+
+        function showErrorState(message) {
+            const titleEl = document.querySelector('.book-title');
+            const authorEl = document.querySelector('.book-author');
+            const deptEl = document.querySelector('.book-department');
+
+            if (titleEl) titleEl.textContent = 'Error Loading Book';
+            if (authorEl) authorEl.textContent = message;
+            if (deptEl) deptEl.textContent = '';
+
+            // Hide short summary section
+            const shortSummarySection = document.querySelector('.short-summary-section');
+            if (shortSummarySection) shortSummarySection.style.display = 'none';
+
+            alert(message);
+        }
+
+        // ====================================
+        // SESSION & USER FUNCTIONS
+        // ====================================
 
         function checkSession() {
             if (!sessionStorage.getItem('student_id')) {

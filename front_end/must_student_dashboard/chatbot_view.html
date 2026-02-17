@@ -1,21 +1,213 @@
-<div class="view-section">
+<div class="view-section chatbot-view">
     <div class="page-header">
         <h1 class="page-title">🤖 AI Library Assistant</h1>
-        <p class="page-subtitle">Get help finding books and answers to library questions</p>
+        <p class="page-subtitle">Ask me anything about books or library policies!</p>
     </div>
 
-    <div class="empty-state" style="margin-top: var(--space-16);">
-        <div class="empty-state-icon" style="font-size: 4rem;">🚧</div>
-        <h3>AI Assistant Coming Soon</h3>
-        <p>We're building an intelligent assistant to help you with:</p>
-        <div style="text-align: left; max-width: 400px; margin: var(--space-6) auto;">
-            <ul style="list-style: none; padding: 0;">
-                <li style="padding: var(--space-2) 0;">✓ Book recommendations based on your interests</li>
-                <li style="padding: var(--space-2) 0;">✓ Research topic suggestions</li>
-                <li style="padding: var(--space-2) 0;">✓ Library policy questions</li>
-                <li style="padding: var(--space-2) 0;">✓ Study material guidance</li>
-            </ul>
+    <div class="chat-container">
+        <div class="chat-history" id="chatHistory">
+            <div class="chat-message model-message">
+                <div class="message-content">
+                    Hello! I'm the MUST Library AI. I can help you find books, understand borrowing rules, or answer
+                    general questions. How can I assist you today?
+                </div>
+            </div>
         </div>
-        <p style="color: var(--text-tertiary); margin-top: var(--space-6);">Stay tuned for updates!</p>
+
+        <div class="chat-input-area">
+            <form id="chatForm" onsubmit="handleChatSubmit(event)">
+                <input type="text" id="chatInput" placeholder="Type your question here..." autocomplete="off">
+                <button type="submit" class="btn btn-primary" id="sendBtn">
+                    Send 🚀
+                </button>
+            </form>
+        </div>
     </div>
 </div>
+
+<style>
+    .chatbot-view {
+        height: calc(100vh - 140px);
+        /* Adjust based on header/nav */
+        display: flex;
+        flex-direction: column;
+    }
+
+    .chat-container {
+        flex: 1;
+        background: var(--white);
+        border-radius: var(--radius-xl);
+        box-shadow: var(--shadow-md);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        margin-bottom: var(--space-4);
+    }
+
+    .chat-history {
+        flex: 1;
+        padding: var(--space-6);
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-4);
+    }
+
+    .chat-message {
+        display: flex;
+        max-width: 80%;
+    }
+
+    .user-message {
+        align-self: flex-end;
+        justify-content: flex-end;
+    }
+
+    .model-message {
+        align-self: flex-start;
+        justify-content: flex-start;
+    }
+
+    .message-content {
+        padding: var(--space-3) var(--space-5);
+        border-radius: var(--radius-lg);
+        font-size: var(--text-base);
+        line-height: 1.5;
+        position: relative;
+    }
+
+    .user-message .message-content {
+        background: var(--primary);
+        color: var(--white);
+        border-bottom-right-radius: 2px;
+    }
+
+    .model-message .message-content {
+        background: var(--gray-100);
+        color: var(--text-primary);
+        border-bottom-left-radius: 2px;
+    }
+
+    .chat-input-area {
+        padding: var(--space-4);
+        background: var(--white);
+        border-top: 1px solid var(--gray-200);
+    }
+
+    #chatForm {
+        display: flex;
+        gap: var(--space-3);
+    }
+
+    #chatInput {
+        flex: 1;
+        padding: var(--space-3) var(--space-4);
+        border: 1px solid var(--gray-300);
+        border-radius: var(--radius-lg);
+        font-size: var(--text-base);
+        outline: none;
+        transition: border-color var(--transition-base);
+    }
+
+    #chatInput:focus {
+        border-color: var(--primary);
+    }
+
+    .typing-indicator {
+        font-style: italic;
+        color: var(--text-tertiary);
+        font-size: var(--text-sm);
+        margin-left: var(--space-2);
+        display: none;
+    }
+</style>
+
+<script>
+    // Initialize chat history array to keep track of context
+    let chatHistoryContext = [];
+
+    async function handleChatSubmit(e) {
+        e.preventDefault();
+        const input = document.getElementById('chatInput');
+        const historyContainer = document.getElementById('chatHistory');
+        const sendBtn = document.getElementById('sendBtn');
+        const message = input.value.trim();
+
+        if (!message) return;
+
+        // Disable input while loading
+        input.disabled = true;
+        sendBtn.disabled = true;
+        sendBtn.textContent = '...';
+
+        // 1. Add User Message to UI
+        appendMessage('user', message);
+        input.value = '';
+
+        // 2. Add Loading Indicator
+        const loadingId = 'loading-' + Date.now();
+        const loadingDiv = document.createElement('div');
+        loadingDiv.id = loadingId;
+        loadingDiv.className = 'chat-message model-message';
+        loadingDiv.innerHTML = `<div class="message-content" style="color: var(--text-tertiary);">Typing...</div>`;
+        historyContainer.appendChild(loadingDiv);
+        historyContainer.scrollTop = historyContainer.scrollHeight;
+
+        try {
+            // 3. Send to Backend
+            const response = await fetch('/api/chatbot', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    message: message,
+                    history: chatHistoryContext
+                })
+            });
+
+            const data = await response.json();
+
+            // Remove loading indicator
+            document.getElementById(loadingId).remove();
+
+            if (data.success) {
+                // 4. Add AI Response to UI
+                appendMessage('model', data.response);
+
+                // Update context
+                chatHistoryContext.push({ role: 'user', content: message });
+                chatHistoryContext.push({ role: 'model', content: data.response });
+
+                // Limit context size
+                if (chatHistoryContext.length > 10) {
+                    chatHistoryContext = chatHistoryContext.slice(-10);
+                }
+            } else {
+                appendMessage('model', '⚠️ Error: ' + (data.message || 'Something went wrong.'));
+            }
+
+        } catch (error) {
+            console.error('Chat error:', error);
+            document.getElementById(loadingId).remove();
+            appendMessage('model', '⚠️ Network error. Please check your connection.');
+        } finally {
+            // Re-enable input
+            input.disabled = false;
+            sendBtn.disabled = false;
+            sendBtn.textContent = 'Send 🚀';
+            input.focus();
+        }
+    }
+
+    function appendMessage(role, text) {
+        const historyContainer = document.getElementById('chatHistory');
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `chat-message ${role}-message`;
+
+        // Convert simple line breaks to <br> for better formatting
+        const formattedText = text.replace(/\n/g, '<br>');
+
+        msgDiv.innerHTML = `<div class="message-content">${formattedText}</div>`;
+        historyContainer.appendChild(msgDiv);
+        historyContainer.scrollTop = historyContainer.scrollHeight;
+    }
+</script>
