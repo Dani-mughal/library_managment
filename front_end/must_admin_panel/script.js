@@ -166,13 +166,24 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    window.updateStatus = async (id, status) => {
-        const response = await fetch(`/api/admin/borrowings/${id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ status })
-        });
-        if ((await response.json()).success) { alert('Updated'); fetchBorrowings(); }
+    window.updateBorrowStatus = async (id, status) => {
+        try {
+            const response = await fetch(`/api/admin/borrowings/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status })
+            });
+            const result = await response.json();
+            if (result.success) {
+                // Success - the fetchBorrowings() will re-render everything
+                fetchBorrowings();
+            } else {
+                alert('Failed to update status: ' + (result.message || 'Unknown error'));
+            }
+        } catch (error) {
+            console.error('Update error:', error);
+            alert('Error connecting to the server');
+        }
     };
 
     // --- Search ---
