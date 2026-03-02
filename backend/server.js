@@ -6,6 +6,7 @@ require('dotenv').config();
 const authRoutes = require('./routes/auth');
 const bookRoutes = require('./routes/books');
 const borrowingRoutes = require('./routes/borrowings');
+const adminRoutes = require('./routes/admin');
 const chatbotRoutes = require('./routes/chatbot');
 
 // Initialize Express app
@@ -26,6 +27,7 @@ app.use(express.static(path.join(__dirname, '../front_end')));
 app.use('/api/auth', authRoutes);
 app.use('/api/books', bookRoutes);
 app.use('/api/borrowings', borrowingRoutes);
+app.use('/api/admin', adminRoutes);
 app.use('/api/chatbot', chatbotRoutes);
 
 // Root endpoint - Redirect to landing page
