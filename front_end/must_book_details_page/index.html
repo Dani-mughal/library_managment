@@ -207,6 +207,7 @@
         // ====================================
 
         function displayBookDetails(book) {
+            currentBook = book;
             // 1. UPDATE PAGE TITLE
             document.title = `${safeGet(book.title, 'Book Details')} - MUST Smart Library`;
 
@@ -361,6 +362,8 @@
             }
         }
 
+        let currentBook = null;
+
         function initUserInfo() {
             const name = sessionStorage.getItem('student_name') || 'Student';
             const firstName = name.split(' ')[0];
@@ -368,6 +371,50 @@
             const headerAvatar = document.getElementById('headerAvatar');
             if (headerName) headerName.textContent = firstName;
             if (headerAvatar) headerAvatar.textContent = firstName.charAt(0).toUpperCase();
+
+            // Attach event to borrow button
+            const borrowBtn = document.querySelector('.btn-primary');
+            if (borrowBtn) {
+                borrowBtn.onclick = () => {
+                    if (currentBook) {
+                        borrowBook(currentBook.id, currentBook.title);
+                    }
+                };
+            }
+        }
+
+        /**
+         * Borrow a book
+         */
+        async function borrowBook(bookId, bookTitle) {
+            const studentId = sessionStorage.getItem('student_id');
+
+            if (!studentId) {
+                alert('Please login to borrow books.');
+                window.location.href = '../must_student_login/login.html';
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/borrowings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ student_id: studentId, book_id: bookId })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert(`✅ "${bookTitle}" borrowed successfully!\n\nDue date: ${data.due_date}`);
+                    // Reload book details to update availability
+                    location.reload();
+                } else {
+                    alert(`❌ ${data.message}`);
+                }
+            } catch (error) {
+                console.error('Error borrowing book:', error);
+                alert('An error occurred. Please try again.');
+            }
         }
 
         function logout() {
