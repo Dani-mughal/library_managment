@@ -515,3 +515,148 @@ textarea:focus {
 .book-table tr {
     animation: fadeIn 0.3s ease forwards;
 }
+
+/* Responsive Admin Panel */
+@media (max-width: 1024px) {
+
+    .container,
+    .nav-container {
+        padding: 0 1.5rem;
+    }
+
+    .modal-content {
+        width: 90%;
+        margin: 5vh auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .nav-container {
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 0 1rem;
+    }
+
+    .mobile-menu-toggle {
+        display: block;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        color: var(--text-main);
+        cursor: pointer;
+    }
+
+    .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: var(--white);
+        flex-direction: column;
+        padding: 1.5rem;
+        border-top: 1px solid var(--border);
+        box-shadow: var(--shadow-md);
+        z-index: 1000;
+    }
+
+    .nav-links.mobile-open {
+        display: flex;
+    }
+
+    .admin-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1.5rem;
+    }
+
+    .header-actions {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .search-bar {
+        width: 100%;
+    }
+
+    /* Table to Card Stack Transformation */
+    .book-table thead {
+        display: none;
+    }
+
+    .book-table,
+    .book-table tbody,
+    .book-table tr,
+    .book-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .book-table tr {
+        margin-bottom: 1.5rem;
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1rem;
+    }
+
+    .book-table td {
+        border: none;
+        padding: 0.5rem 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        text-align: right;
+    }
+
+    .book-table td::before {
+        content: attr(data-label);
+        font-weight: 700;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        float: left;
+    }
+
+    .book-table td:first-child,
+    .book-table td:nth-child(2) {
+        justify-content: center;
+        text-align: center;
+    }
+
+    .book-table td:first-child::before,
+    .book-table td:nth-child(2)::before {
+        display: none;
+    }
+
+    .mini-cover {
+        width: 100px;
+        height: 140px;
+        margin: 0 auto;
+    }
+
+    .book-info {
+        text-align: center;
+        width: 100%;
+    }
+
+    .nav-user {
+        display: none;
+        /* Hide user pill on narrow mobile to save space */
+    }
+}
+
+@media (max-width: 480px) {
+    .admin-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .nav-logo span {
+        display: none;
+    }
+
+    .book-table th:nth-child(4),
+    .book-table td:nth-child(4) {
+        display: none;
+    }
+}

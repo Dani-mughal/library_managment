@@ -46,6 +46,13 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => adminLoginOverlay.style.display = 'none', 500);
     }
 
+    // --- Mobile Menu ---
+    const adminMenuToggle = document.getElementById('adminMenuToggle');
+    const adminNavLinks = document.getElementById('adminNavLinks');
+    if (adminMenuToggle) {
+        adminMenuToggle.onclick = () => adminNavLinks.classList.toggle('mobile-open');
+    }
+
     // --- Selectors ---
     const booksView = document.getElementById('booksView');
     const borrowingsView = document.getElementById('borrowingsView');
@@ -108,13 +115,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 : `background: ${book.cover_color || 'var(--primary)'}`;
 
             row.innerHTML = `
-                <td>#${book.id}</td>
-                <td><div class="mini-cover" style="${coverStyle}"></div></td>
-                <td><div class="book-info"><h4>${book.title}</h4><p>${book.author}</p></div></td>
-                <td><span class="text-muted" style="font-size: 0.875rem">${book.department}</span></td>
-                <td><span class="stock-pill ${stockClass}">${book.available_copies} / ${book.total_copies}</span></td>
-                <td>
-                    <div style="display: flex; gap: 0.5rem">
+                <td data-label="ID">#${book.id}</td>
+                <td data-label="Cover"><div class="mini-cover" style="${coverStyle}"></div></td>
+                <td data-label="Book"><div class="book-info"><h4>${book.title}</h4><p>${book.author}</p></div></td>
+                <td data-label="Department"><span class="text-muted" style="font-size: 0.875rem">${book.department}</span></td>
+                <td data-label="Stock"><span class="stock-pill ${stockClass}">${book.available_copies} / ${book.total_copies}</span></td>
+                <td data-label="Actions">
+                    <div style="display: flex; gap: 0.5rem; justify-content: flex-end; width: 100%">
                         <button class="btn-icon edit" onclick="editBook(${book.id})"><i class="fas fa-edit"></i></button>
                         <button class="btn-icon delete" onclick="deleteBook(${book.id})"><i class="fas fa-trash"></i></button>
                     </div>
@@ -140,17 +147,15 @@ document.addEventListener('DOMContentLoaded', () => {
         borrowTableBody.innerHTML = '';
         borrowings.forEach(item => {
             const row = document.createElement('tr');
-            const bDate = new Date(item.borrowed_date).toLocaleDateString();
-            const dDate = new Date(item.due_date).toLocaleDateString();
             row.innerHTML = `
-                <td>#${item.id}</td>
-                <td><div class="book-info"><h4>${item.student_name}</h4><p>${item.student_id}</p></div></td>
-                <td>${item.book_title}</td>
-                <td>${bDate}</td>
-                <td>${dDate}</td>
-                <td><span class="status-badge ${item.status}">${item.status}</span></td>
-                <td>
-                    <select class="status-select" onchange="updateStatus(${item.id}, this.value)">
+                <td data-label="ID">#${item.id}</td>
+                <td data-label="Student">${item.student_name} (${item.student_id})</td>
+                <td data-label="Book">${item.book_title}</td>
+                <td data-label="Borrowed">${new Date(item.borrowed_date).toLocaleDateString()}</td>
+                <td data-label="Due">${new Date(item.due_date).toLocaleDateString()}</td>
+                <td data-label="Status"><span class="status-badge ${item.status}">${item.status}</span></td>
+                <td data-label="Actions">
+                    <select onchange="updateBorrowStatus(${item.id}, this.value)" class="status-select">
                         <option value="active" ${item.status === 'active' ? 'selected' : ''}>Active</option>
                         <option value="returned" ${item.status === 'returned' ? 'selected' : ''}>Returned</option>
                         <option value="overdue" ${item.status === 'overdue' ? 'selected' : ''}>Overdue</option>

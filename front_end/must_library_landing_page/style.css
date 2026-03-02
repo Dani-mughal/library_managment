@@ -57,17 +57,24 @@ body {
 
 /* Header */
 .header {
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border-bottom: 1px solid rgba(226, 232, 240, 0.5);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
     height: 80px;
     display: flex;
     align-items: center;
-    transition: var(--transition);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.mobile-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
 }
 
 .header.scrolled {
@@ -130,18 +137,57 @@ body {
     transition: var(--transition);
 }
 
-@media (max-width: 640px) {
-    .brand-name {
-        display: none;
+@media (max-width: 768px) {
+    .header {
+        height: 70px;
     }
 
-    .nav-buttons {
+    .brand {
         gap: 0.5rem;
     }
 
+    .brand-name {
+        font-size: 1.125rem;
+    }
+
+    .mobile-toggle {
+        display: block;
+    }
+
+    .nav-buttons {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        flex-direction: column;
+        padding: 2rem;
+        gap: 1rem;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        border-top: 1px solid #eee;
+        animation: navSlideDown 0.3s ease-out;
+    }
+
+    .nav-buttons.mobile-open {
+        display: flex;
+    }
+
     .btn {
-        padding: 0.5rem 1rem;
-        font-size: 0.75rem;
+        width: 100%;
+        justify-content: center;
+    }
+
+    @keyframes navSlideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 }
 
@@ -234,12 +280,12 @@ body {
 }
 
 .hero-title {
-    font-size: clamp(2.5rem, 8vw, 4.5rem);
-    font-weight: 800;
-    line-height: 1.05;
+    font-size: clamp(2rem, 5vw, 4.5rem);
+    font-weight: 850;
+    line-height: 1.1;
     letter-spacing: -0.04em;
-    margin-bottom: 1.5rem;
-    color: var(--text-main);
+    margin-bottom: 2rem;
+    color: var(--text-dark);
     background: linear-gradient(135deg, var(--text-main) 30%, var(--primary) 100%);
     -webkit-background-clip: text;
     background-clip: text;

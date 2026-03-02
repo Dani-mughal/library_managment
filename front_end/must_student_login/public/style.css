@@ -88,3 +88,10 @@ a {
 a:hover {
     text-decoration: underline;
 }
+
+@media (max-width: 400px) {
+    form {
+        padding: 20px;
+        margin: 10px;
+    }
+}
