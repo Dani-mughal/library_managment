@@ -63,7 +63,9 @@ body {
     color: var(--text-main);
 }
 
-.nav-logo img { height: 32px; }
+.nav-logo img {
+    height: 32px;
+}
 
 .nav-links {
     display: flex;
@@ -79,7 +81,9 @@ body {
     transition: color 0.2s;
 }
 
-.nav-link:hover { color: var(--primary); }
+.nav-link:hover {
+    color: var(--primary);
+}
 
 .nav-user {
     display: flex;
@@ -104,7 +108,9 @@ body {
 }
 
 /* Main Content */
-.admin-main { padding: 2.5rem 0; }
+.admin-main {
+    padding: 2.5rem 0;
+}
 
 .admin-header {
     display: flex;
@@ -113,7 +119,10 @@ body {
     margin-bottom: 2rem;
 }
 
-.admin-header h1 { font-size: 1.875rem; font-weight: 700; }
+.admin-header h1 {
+    font-size: 1.875rem;
+    font-weight: 700;
+}
 
 .search-bar {
     position: relative;
@@ -139,7 +148,9 @@ body {
     transition: border-color 0.2s;
 }
 
-.search-bar input:focus { border-color: var(--primary); }
+.search-bar input:focus {
+    border-color: var(--primary);
+}
 
 /* Table Styles */
 .table-container {
@@ -172,7 +183,9 @@ body {
     vertical-align: middle;
 }
 
-.book-table tr:last-child td { border-bottom: none; }
+.book-table tr:last-child td {
+    border-bottom: none;
+}
 
 .mini-cover {
     width: 48px;
@@ -183,8 +196,15 @@ body {
     box-shadow: var(--shadow-sm);
 }
 
-.book-info h4 { font-weight: 600; font-size: 0.9375rem; }
-.book-info p { font-size: 0.8125rem; color: var(--text-muted); }
+.book-info h4 {
+    font-weight: 600;
+    font-size: 0.9375rem;
+}
+
+.book-info p {
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+}
 
 .stock-pill {
     padding: 0.25rem 0.75rem;
@@ -194,9 +214,20 @@ body {
     display: inline-block;
 }
 
-.stock-pill.in-stock { background: #DCFCE7; color: #166534; }
-.stock-pill.low-stock { background: #FEF9C3; color: #854D0E; }
-.stock-pill.out-of-stock { background: #FEE2E2; color: #991B1B; }
+.stock-pill.in-stock {
+    background: #DCFCE7;
+    color: #166534;
+}
+
+.stock-pill.low-stock {
+    background: #FEF9C3;
+    color: #854D0E;
+}
+
+.stock-pill.out-of-stock {
+    background: #FEE2E2;
+    color: #991B1B;
+}
 
 .btn {
     padding: 0.625rem 1.25rem;
@@ -211,11 +242,87 @@ body {
     gap: 0.5rem;
 }
 
-.btn-primary { background: var(--primary); color: white; }
-.btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); }
+.btn-primary {
+    background: var(--primary);
+    color: white;
+}
 
-.btn-secondary { background: var(--white); color: var(--text-main); border: 1px solid var(--border); }
-.btn-secondary:hover { background: var(--bg-main); }
+.btn-primary:hover {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    background: var(--white);
+    color: var(--text-main);
+    border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+    background: var(--bg-main);
+}
+
+.status-dot.reserved {
+    background: var(--warning);
+}
+
+/* Tab Navigation */
+.tab-nav {
+    display: flex;
+    background: var(--bg-main);
+    padding: 0.25rem;
+    border-radius: 12px;
+    gap: 0.25rem;
+}
+
+.tab-btn {
+    padding: 0.5rem 1.25rem;
+    border: none;
+    background: none;
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-radius: 10px;
+    transition: all 0.2s;
+}
+
+.tab-btn.active {
+    background: var(--white);
+    color: var(--primary);
+    box-shadow: var(--shadow-sm);
+}
+
+.header-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+/* Status Badges for Borrowings */
+.status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 99px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.status-badge.active {
+    background: #DBEAFE;
+    color: #1E40AF;
+}
+
+.status-badge.returned {
+    background: #DCFCE7;
+    color: #166534;
+}
+
+.status-badge.overdue {
+    background: #FEE2E2;
+    color: #991B1B;
+}
 
 .btn-icon {
     padding: 0.5rem;
@@ -227,8 +334,15 @@ body {
     transition: all 0.2s;
 }
 
-.btn-icon:hover { background: var(--bg-main); color: var(--text-main); }
-.btn-icon.delete:hover { color: #DC2626; background: #FEF2F2; }
+.btn-icon:hover {
+    background: var(--bg-main);
+    color: var(--text-main);
+}
+
+.btn-icon.delete:hover {
+    color: #DC2626;
+    background: #FEF2F2;
+}
 
 /* Modal Styles */
 .modal {
@@ -239,7 +353,7 @@ body {
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(4px);
 }
 
@@ -273,12 +387,25 @@ body {
     gap: 1.5rem;
 }
 
-.form-group { display: flex; flex-direction: column; gap: 0.5rem; }
-.form-group.full-width { grid-column: span 2; }
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
 
-label { font-size: 0.875rem; font-weight: 600; color: var(--text-main); }
+.form-group.full-width {
+    grid-column: span 2;
+}
 
-input, select, textarea {
+label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+input,
+select,
+textarea {
     padding: 0.75rem;
     border: 1px solid var(--border);
     border-radius: 0.75rem;
@@ -287,7 +414,11 @@ input, select, textarea {
     outline: none;
 }
 
-input:focus, select:focus, textarea:focus { border-color: var(--primary); }
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--primary);
+}
 
 .form-actions {
     display: flex;
@@ -300,8 +431,17 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary); }
 
 /* Animations */
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-.book-table tr { animation: fadeIn 0.3s ease forwards; }
+.book-table tr {
+    animation: fadeIn 0.3s ease forwards;
+}

@@ -1,5 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Selectors
+    const booksView = document.getElementById('booksView');
+    const borrowingsView = document.getElementById('borrowingsView');
     const bookTableBody = document.getElementById('bookTableBody');
+    const borrowTableBody = document.getElementById('borrowTableBody');
     const bookForm = document.getElementById('bookForm');
     const bookModal = document.getElementById('bookModal');
     const addBookBtn = document.getElementById('addBookBtn');
@@ -7,10 +11,35 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeModal = document.querySelector('.close');
     const modalTitle = document.getElementById('modalTitle');
     const bookSearch = document.getElementById('bookSearch');
+    const borrowSearch = document.getElementById('borrowSearch');
+    const tabBtns = document.querySelectorAll('.tab-btn');
 
     let allBooks = [];
+    let allBorrowings = [];
 
-    // Fetch and display books
+    // --- View Switching ---
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const tab = btn.dataset.tab;
+
+            // Update buttons
+            tabBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            // Update views
+            if (tab === 'books') {
+                booksView.style.display = 'block';
+                borrowingsView.style.display = 'none';
+                fetchBooks();
+            } else {
+                booksView.style.display = 'none';
+                borrowingsView.style.display = 'block';
+                fetchBorrowings();
+            }
+        });
+    });
+
+    // --- Book Management ---
     async function fetchBooks() {
         try {
             const response = await fetch('/api/books');
@@ -21,7 +50,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } catch (error) {
             console.error('Error fetching books:', error);
-            alert('Failed to load books. Please check the backend connection.');
         }
     }
 
@@ -29,8 +57,6 @@ document.addEventListener('DOMContentLoaded', () => {
         bookTableBody.innerHTML = '';
         books.forEach(book => {
             const row = document.createElement('tr');
-
-            // Stock Status
             let stockClass = 'in-stock';
             if (book.available_copies === 0) stockClass = 'out-of-stock';
             else if (book.available_copies < 2) stockClass = 'low-stock';
@@ -69,7 +95,72 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Search functionality
+    // --- Borrowing Management ---
+    async function fetchBorrowings() {
+        try {
+            const response = await fetch('/api/admin/borrowings');
+            const data = await response.json();
+            if (data.success) {
+                allBorrowings = data.borrowings;
+                renderBorrowings(allBorrowings);
+            }
+        } catch (error) {
+            console.error('Error fetching borrowings:', error);
+        }
+    }
+
+    function renderBorrowings(borrowings) {
+        borrowTableBody.innerHTML = '';
+        borrowings.forEach(item => {
+            const row = document.createElement('tr');
+            const borrowedDate = new Date(item.borrowed_date).toLocaleDateString();
+            const dueDate = new Date(item.due_date).toLocaleDateString();
+
+            row.innerHTML = `
+                <td>#${item.id}</td>
+                <td>
+                    <div class="book-info">
+                        <h4>${item.student_name}</h4>
+                        <p>${item.student_id}</p>
+                    </div>
+                </td>
+                <td>${item.book_title}</td>
+                <td>${borrowedDate}</td>
+                <td>${dueDate}</td>
+                <td><span class="status-badge ${item.status}">${item.status}</span></td>
+                <td>
+                    <select class="status-select" onchange="updateStatus(${item.id}, this.value)">
+                        <option value="active" ${item.status === 'active' ? 'selected' : ''}>Active</option>
+                        <option value="returned" ${item.status === 'returned' ? 'selected' : ''}>Returned</option>
+                        <option value="overdue" ${item.status === 'overdue' ? 'selected' : ''}>Overdue</option>
+                    </select>
+                </td>
+            `;
+            borrowTableBody.appendChild(row);
+        });
+    }
+
+    window.updateStatus = async (id, newStatus) => {
+        try {
+            const response = await fetch(`/api/admin/borrowings/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: newStatus })
+            });
+            const result = await response.json();
+            if (result.success) {
+                alert('Status updated successfully');
+                fetchBorrowings();
+            } else {
+                alert('Update failed: ' + result.message);
+            }
+        } catch (error) {
+            console.error('Error updating status:', error);
+            alert('Error connecting to server');
+        }
+    };
+
+    // --- Search Logic ---
     bookSearch.addEventListener('input', (e) => {
         const term = e.target.value.toLowerCase();
         const filtered = allBooks.filter(book =>
@@ -80,7 +171,17 @@ document.addEventListener('DOMContentLoaded', () => {
         renderBooks(filtered);
     });
 
-    // Modal controls
+    borrowSearch.addEventListener('input', (e) => {
+        const term = e.target.value.toLowerCase();
+        const filtered = allBorrowings.filter(item =>
+            item.student_id.toLowerCase().includes(term) ||
+            item.student_name.toLowerCase().includes(term) ||
+            item.book_title.toLowerCase().includes(term)
+        );
+        renderBorrowings(filtered);
+    });
+
+    // --- Existing Modal Logic ---
     addBookBtn.onclick = () => {
         modalTitle.innerText = 'Add New Book';
         bookForm.reset();
@@ -99,7 +200,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (event.target == bookModal) hideModal();
     };
 
-    // Form submission
     bookForm.onsubmit = async (e) => {
         e.preventDefault();
         const bookId = document.getElementById('bookId').value;
@@ -119,64 +219,42 @@ document.addEventListener('DOMContentLoaded', () => {
         const url = bookId ? `/api/admin/books/${bookId}` : '/api/admin/books';
         const method = bookId ? 'PUT' : 'POST';
 
-        try {
-            const response = await fetch(url, {
-                method: method,
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(bookData)
-            });
-            const result = await response.json();
-            if (result.success) {
-                alert(bookId ? 'Book updated successfully!' : 'Book added successfully!');
-                hideModal();
-                fetchBooks();
-            } else {
-                alert('Error: ' + result.message);
-            }
-        } catch (error) {
-            console.error('Error saving book:', error);
-            alert('Failed to save book.');
+        const response = await fetch(url, {
+            method: method,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(bookData)
+        });
+        const result = await response.json();
+        if (result.success) {
+            alert('Success'); hideModal(); fetchBooks();
         }
     };
 
-    // Globally accessible functions for inline buttons
     window.editBook = (id) => {
         const book = allBooks.find(b => b.id === id);
         if (!book) return;
-
         modalTitle.innerText = 'Edit Book: ' + book.title;
         document.getElementById('bookId').value = book.id;
         document.getElementById('title').value = book.title;
         document.getElementById('author').value = book.author;
         document.getElementById('department').value = book.department;
         document.getElementById('description').value = book.description || '';
-        document.getElementById('cover_color').value = book.cover_color || 'linear-gradient(135deg, #1e3c72, #2a5298)';
+        document.getElementById('cover_color').value = book.cover_color;
         document.getElementById('image_url').value = book.image_url || '';
         document.getElementById('shelf_location').value = book.shelf_location || '';
         document.getElementById('total_copies').value = book.total_copies;
         document.getElementById('available_copies').value = book.available_copies;
         document.getElementById('topics').value = book.topics || '';
-
         bookModal.style.display = 'block';
     };
 
     window.deleteBook = async (id) => {
-        if (!confirm('Are you sure you want to delete this book? This action cannot be undone.')) return;
-
-        try {
-            const response = await fetch(`/api/admin/books/${id}`, { method: 'DELETE' });
-            const result = await response.json();
-            if (result.success) {
-                alert('Book deleted successfully');
-                fetchBooks();
-            } else {
-                alert('Error deleting book: ' + result.message);
-            }
-        } catch (error) {
-            console.error('Error deleting book:', error);
-            alert('Failed to delete book.');
-        }
+        if (!confirm('Delete?')) return;
+        const response = await fetch(`/api/admin/books/${id}`, { method: 'DELETE' });
+        const result = await response.json();
+        if (result.success) fetchBooks();
     };
 
+    // Initial load
     fetchBooks();
 });

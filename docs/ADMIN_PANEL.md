@@ -32,13 +32,22 @@ Click the **"Add New Book"** button in the top navigation bar to open the creati
 - **Required Fields:** Title, Author, Department.
 - **Optional Fields:** Description, Shelf Location, Total/Available Copies, Image URL, Cover Gradient, and Topics.
 
-### 3. Editing Existing Books
-Click the **Edit** (blue icon) button on any row in the book table.
+### 3. Borrowing Management
+Switch to the **"Borrowings"** tab in the top navigation to manage book loans.
+- **View Records:** See all borrowing transactions, including student details, book titles, and due dates.
+- **Update Status:** Use the dropdown in each row to change a borrowing's status:
+    - `Active`: Book is currently out.
+    - `Returned`: Book has been brought back (automatically updates book availability and sets `returned_date`).
+    - `Overdue`: Book is past its return deadline.
+- **Search:** Quickly find specific borrowing records by Student ID, Name, or Book title.
+
+### 4. Editing Existing Books
+Click the **Edit** (blue icon) button in the **"Books"** tab.
 - The form will pre-populate with the current book details.
 - Modify any field and click **"Save Book"** to update the database.
 
 ### 4. Deleting Books
-Click the **Delete** (red icon) button for a permanent removal of the book from the system.
+Click the **Delete** (red icon) button in the **"Books"** tab for a permanent removal.
 - *Note:* A confirmation prompt is required to prevent accidental deletion.
 
 ### 5. Instant Catalog Search

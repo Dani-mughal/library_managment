@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
+
 <body>
     <header class="app-nav">
         <div class="nav-container">
@@ -16,9 +18,10 @@
             </a>
             <div class="nav-links">
                 <a href="/must_student_dashboard/index.html" class="nav-link">Student View</a>
-                <button class="btn btn-primary" id="addBookBtn">
-                    <i class="fas fa-plus"></i> Add New Book
-                </button>
+                <div class="tab-nav">
+                    <button class="tab-btn active" data-tab="books">Books</button>
+                    <button class="tab-btn" data-tab="borrowings">Borrowings</button>
+                </div>
             </div>
             <div class="nav-user">
                 <div class="nav-user-avatar">A</div>
@@ -28,12 +31,17 @@
     </header>
 
     <main class="admin-main">
-        <div class="container">
+        <div class="container" id="booksView">
             <div class="admin-header">
                 <h1>Manage Library Catalog</h1>
-                <div class="search-bar">
-                    <i class="fas fa-search"></i>
-                    <input type="text" id="bookSearch" placeholder="Search by title, author, or department...">
+                <div class="header-actions">
+                    <div class="search-bar">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="bookSearch" placeholder="Search books...">
+                    </div>
+                    <button class="btn btn-primary" id="addBookBtn">
+                        <i class="fas fa-plus"></i> Add New Book
+                    </button>
                 </div>
             </div>
 
@@ -51,6 +59,35 @@
                     </thead>
                     <tbody id="bookTableBody">
                         <!-- Books will be loaded here via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="container" id="borrowingsView" style="display: none;">
+            <div class="admin-header">
+                <h1>Manage Borrowings</h1>
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="borrowSearch" placeholder="Search by Student ID or Name...">
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table class="book-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Student</th>
+                            <th>Book Title</th>
+                            <th>Borrowed Date</th>
+                            <th>Due Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="borrowTableBody">
+                        <!-- Borrowings will be loaded here via JS -->
                     </tbody>
                 </table>
             </div>
@@ -107,7 +144,8 @@
                     </div>
                     <div class="form-group full-width">
                         <label for="description">Description</label>
-                        <textarea id="description" rows="4" placeholder="Enter book summary and AI insights..."></textarea>
+                        <textarea id="description" rows="4"
+                            placeholder="Enter book summary and AI insights..."></textarea>
                     </div>
                     <div class="form-group">
                         <label for="cover_color">Cover Gradient (CSS)</label>
@@ -124,4 +162,5 @@
 
     <script src="script.js"></script>
 </body>
+
 </html>
