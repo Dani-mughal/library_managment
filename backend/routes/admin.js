@@ -2,6 +2,16 @@ const express = require('express');
 const router = express.Router();
 const db = require('../config/db');
 
+// Admin Login
+router.post('/login', (req, res) => {
+    const { password } = req.body;
+    if (password === process.env.ADMIN_PASSWORD) {
+        res.json({ success: true, token: 'admin-session-' + Date.now() });
+    } else {
+        res.status(401).json({ success: false, message: 'Invalid admin password' });
+    }
+});
+
 // Add a new book
 router.post('/books', (req, res) => {
     const {

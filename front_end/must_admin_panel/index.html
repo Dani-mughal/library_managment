@@ -9,154 +9,176 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
-<body>
-    <header class="app-nav">
-        <div class="nav-container">
-            <a href="/" class="nav-logo">
+<body class="admin-locked">
+    <!-- Admin Login Overlay -->
+    <div id="adminLoginOverlay" class="login-overlay">
+        <div class="login-card">
+            <div class="login-logo">
                 <img src="/images/logo.png" alt="MUST Logo">
-                <span>Admin Central</span>
-            </a>
-            <div class="nav-links">
-                <a href="/must_student_dashboard/index.html" class="nav-link">Student View</a>
-                <div class="tab-nav">
-                    <button class="tab-btn active" data-tab="books">Books</button>
-                    <button class="tab-btn" data-tab="borrowings">Borrowings</button>
+                <h2>Admin Login</h2>
+                <p>Enter the secure password to access admin features.</p>
+            </div>
+            <form id="adminLoginForm">
+                <div class="form-group">
+                    <label for="adminPass">Secure Password</label>
+                    <input type="password" id="adminPass" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn btn-primary full-width">Unlock Dashboard</button>
+            </form>
+            <p id="loginError" class="error-text" style="display: none;">Invalid password. Access denied.</p>
+        </div>
+    </div>
+
+    <!-- Main Admin Dashboard (Hidden by default) -->
+    <div id="adminDashboardContent">
+        <header class="app-nav">
+            <div class="nav-container">
+                <a href="/" class="nav-logo">
+                    <img src="/images/logo.png" alt="MUST Logo">
+                    <span>Admin Central</span>
+                </a>
+                <div class="nav-links">
+                    <a href="/must_student_dashboard/index.html" class="nav-link">Student View</a>
+                    <div class="tab-nav">
+                        <button class="tab-btn active" data-tab="books">Books</button>
+                        <button class="tab-btn" data-tab="borrowings">Borrowings</button>
+                    </div>
+                </div>
+                <div class="nav-user">
+                    <div class="nav-user-avatar">A</div>
+                    <span>Administrator</span>
                 </div>
             </div>
-            <div class="nav-user">
-                <div class="nav-user-avatar">A</div>
-                <span>Administrator</span>
-            </div>
-        </div>
-    </header>
+        </header>
 
-    <main class="admin-main">
-        <div class="container" id="booksView">
-            <div class="admin-header">
-                <h1>Manage Library Catalog</h1>
-                <div class="header-actions">
+        <main class="admin-main">
+            <div class="container" id="booksView">
+                <div class="admin-header">
+                    <h1>Manage Library Catalog</h1>
+                    <div class="header-actions">
+                        <div class="search-bar">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="bookSearch" placeholder="Search books...">
+                        </div>
+                        <button class="btn btn-primary" id="addBookBtn">
+                            <i class="fas fa-plus"></i> Add New Book
+                        </button>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table class="book-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Cover</th>
+                                <th>Title & Author</th>
+                                <th>Department</th>
+                                <th>Stock</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bookTableBody">
+                            <!-- Books will be loaded here via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="container" id="borrowingsView" style="display: none;">
+                <div class="admin-header">
+                    <h1>Manage Borrowings</h1>
                     <div class="search-bar">
                         <i class="fas fa-search"></i>
-                        <input type="text" id="bookSearch" placeholder="Search books...">
-                    </div>
-                    <button class="btn btn-primary" id="addBookBtn">
-                        <i class="fas fa-plus"></i> Add New Book
-                    </button>
-                </div>
-            </div>
-
-            <div class="table-container">
-                <table class="book-table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Cover</th>
-                            <th>Title & Author</th>
-                            <th>Department</th>
-                            <th>Stock</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="bookTableBody">
-                        <!-- Books will be loaded here via JS -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <div class="container" id="borrowingsView" style="display: none;">
-            <div class="admin-header">
-                <h1>Manage Borrowings</h1>
-                <div class="search-bar">
-                    <i class="fas fa-search"></i>
-                    <input type="text" id="borrowSearch" placeholder="Search by Student ID or Name...">
-                </div>
-            </div>
-
-            <div class="table-container">
-                <table class="book-table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Student</th>
-                            <th>Book Title</th>
-                            <th>Borrowed Date</th>
-                            <th>Due Date</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="borrowTableBody">
-                        <!-- Borrowings will be loaded here via JS -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </main>
-
-    <!-- Book Form Modal -->
-    <div id="bookModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="modalTitle">Add New Book</h2>
-                <span class="close">&times;</span>
-            </div>
-            <form id="bookForm">
-                <input type="hidden" id="bookId">
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="title">Book Title</label>
-                        <input type="text" id="title" required placeholder="e.g. Advanced Circuit Theory">
-                    </div>
-                    <div class="form-group">
-                        <label for="author">Author</label>
-                        <input type="text" id="author" required placeholder="e.g. Robert C. Martin">
-                    </div>
-                    <div class="form-group">
-                        <label for="department">Department</label>
-                        <select id="department">
-                            <option value="Software Engineering">Software Engineering</option>
-                            <option value="Electrical Engineering">Electrical Engineering</option>
-                            <option value="Mechanical Engineering">Mechanical Engineering</option>
-                            <option value="Civil Engineering">Civil Engineering</option>
-                            <option value="General Science">General Science</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="shelf_location">Shelf Location</label>
-                        <input type="text" id="shelf_location" placeholder="e.g. Shelf 18, Row A">
-                    </div>
-                    <div class="form-group">
-                        <label for="total_copies">Total Copies</label>
-                        <input type="number" id="total_copies" min="1" value="5">
-                    </div>
-                    <div class="form-group">
-                        <label for="available_copies">Available Copies</label>
-                        <input type="number" id="available_copies" min="0" value="5">
-                    </div>
-                    <div class="form-group full-width">
-                        <label for="image_url">Image URL</label>
-                        <input type="text" id="image_url" placeholder="/images/books/filename.png">
-                    </div>
-                    <div class="form-group full-width">
-                        <label for="topics">Topics (Comma separated)</label>
-                        <input type="text" id="topics" placeholder="Clean Code, Best Practices, Design Patterns">
-                    </div>
-                    <div class="form-group full-width">
-                        <label for="description">Description</label>
-                        <textarea id="description" rows="4"
-                            placeholder="Enter book summary and AI insights..."></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="cover_color">Cover Gradient (CSS)</label>
-                        <input type="text" id="cover_color" value="linear-gradient(135deg, #1e3c72, #2a5298)">
+                        <input type="text" id="borrowSearch" placeholder="Search by Student ID or Name...">
                     </div>
                 </div>
-                <div class="form-actions">
-                    <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save Book</button>
+
+                <div class="table-container">
+                    <table class="book-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Student</th>
+                                <th>Book Title</th>
+                                <th>Borrowed Date</th>
+                                <th>Due Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="borrowTableBody">
+                            <!-- Borrowings will be loaded here via JS -->
+                        </tbody>
+                    </table>
                 </div>
-            </form>
+            </div>
+        </main>
+
+        <!-- Book Form Modal -->
+        <div id="bookModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="modalTitle">Add New Book</h2>
+                    <span class="close">&times;</span>
+                </div>
+                <form id="bookForm">
+                    <input type="hidden" id="bookId">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="title">Book Title</label>
+                            <input type="text" id="title" required placeholder="e.g. Advanced Circuit Theory">
+                        </div>
+                        <div class="form-group">
+                            <label for="author">Author</label>
+                            <input type="text" id="author" required placeholder="e.g. Robert C. Martin">
+                        </div>
+                        <div class="form-group">
+                            <label for="department">Department</label>
+                            <select id="department">
+                                <option value="Software Engineering">Software Engineering</option>
+                                <option value="Electrical Engineering">Electrical Engineering</option>
+                                <option value="Mechanical Engineering">Mechanical Engineering</option>
+                                <option value="Civil Engineering">Civil Engineering</option>
+                                <option value="General Science">General Science</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="shelf_location">Shelf Location</label>
+                            <input type="text" id="shelf_location" placeholder="e.g. Shelf 18, Row A">
+                        </div>
+                        <div class="form-group">
+                            <label for="total_copies">Total Copies</label>
+                            <input type="number" id="total_copies" min="1" value="5">
+                        </div>
+                        <div class="form-group">
+                            <label for="available_copies">Available Copies</label>
+                            <input type="number" id="available_copies" min="0" value="5">
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="image_url">Image URL</label>
+                            <input type="text" id="image_url" placeholder="/images/books/filename.png">
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="topics">Topics (Comma separated)</label>
+                            <input type="text" id="topics" placeholder="Clean Code, Best Practices, Design Patterns">
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="description">Description</label>
+                            <textarea id="description" rows="4"
+                                placeholder="Enter book summary and AI insights..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="cover_color">Cover Gradient (CSS)</label>
+                            <input type="text" id="cover_color" value="linear-gradient(135deg, #1e3c72, #2a5298)">
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Book</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
